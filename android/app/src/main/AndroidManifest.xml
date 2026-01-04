@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="recliq_user"
+        android:label="Recliq"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

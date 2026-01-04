@@ -80,22 +80,46 @@ mixin _$AuthStore on _AuthStore, Store {
     return _$verifyOtpAsyncAction.run(() => super.verifyOtp(phoneNumber, otp));
   }
 
+  late final _$verifyOtpEmailAsyncAction =
+      AsyncAction('_AuthStore.verifyOtpEmail', context: context);
+
+  @override
+  Future<void> verifyOtpEmail(String email, String otp) {
+    return _$verifyOtpEmailAsyncAction
+        .run(() => super.verifyOtpEmail(email, otp));
+  }
+
   late final _$signupAsyncAction =
       AsyncAction('_AuthStore.signup', context: context);
 
   @override
   Future<void> signup(
-      {required String phoneNumber, String? email, String? name}) {
-    return _$signupAsyncAction.run(
-        () => super.signup(phoneNumber: phoneNumber, email: email, name: name));
+      {required String phoneNumber,
+      String? email,
+      String? name,
+      String? password}) {
+    return _$signupAsyncAction.run(() => super.signup(
+        phoneNumber: phoneNumber,
+        email: email,
+        name: name,
+        password: password));
+  }
+
+  late final _$resendOtpAsyncAction =
+      AsyncAction('_AuthStore.resendOtp', context: context);
+
+  @override
+  Future<void> resendOtp(String identifier) {
+    return _$resendOtpAsyncAction.run(() => super.resendOtp(identifier));
   }
 
   late final _$loginAsyncAction =
       AsyncAction('_AuthStore.login', context: context);
 
   @override
-  Future<void> login(String phoneNumber) {
-    return _$loginAsyncAction.run(() => super.login(phoneNumber));
+  Future<void> login(String identifier, {String? password}) {
+    return _$loginAsyncAction
+        .run(() => super.login(identifier, password: password));
   }
 
   late final _$logoutAsyncAction =
@@ -112,6 +136,32 @@ mixin _$AuthStore on _AuthStore, Store {
   @override
   Future<void> getCurrentUser() {
     return _$getCurrentUserAsyncAction.run(() => super.getCurrentUser());
+  }
+
+  late final _$refreshTokenIfNeededAsyncAction =
+      AsyncAction('_AuthStore.refreshTokenIfNeeded', context: context);
+
+  @override
+  Future<bool> refreshTokenIfNeeded() {
+    return _$refreshTokenIfNeededAsyncAction
+        .run(() => super.refreshTokenIfNeeded());
+  }
+
+  late final _$forgotPasswordAsyncAction =
+      AsyncAction('_AuthStore.forgotPassword', context: context);
+
+  @override
+  Future<void> forgotPassword(String email) {
+    return _$forgotPasswordAsyncAction.run(() => super.forgotPassword(email));
+  }
+
+  late final _$resetPasswordAsyncAction =
+      AsyncAction('_AuthStore.resetPassword', context: context);
+
+  @override
+  Future<void> resetPassword(String email, String otp, String newPassword) {
+    return _$resetPasswordAsyncAction
+        .run(() => super.resetPassword(email, otp, newPassword));
   }
 
   @override

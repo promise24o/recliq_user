@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../shared/themes/app_theme.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../mobx/auth_store.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../shared/themes/app_theme.dart';
+import '../../../../shared/widgets/custom_text_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,113 +16,244 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _authStore = getIt<AuthStore>();
-  final _phoneController = TextEditingController();
+  final _identifierController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  String? _identifierError;
+  String? _passwordError;
 
   @override
   void dispose() {
-    _phoneController.dispose();
+    _identifierController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
   void _handleLogin() async {
-    if (_phoneController.text.isEmpty) return;
-    await _authStore.login(_phoneController.text);
+    // Clear previous errors
+    setState(() {
+      _identifierError = null;
+      _passwordError = null;
+    });
+
+    bool hasError = false;
+
+    if (_identifierController.text.isEmpty) {
+      setState(() {
+        _identifierError = "Email or phone number is required";
+      });
+      hasError = true;
+    }
+
+    if (_passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = "Password is required";
+      });
+      hasError = true;
+    }
+
+    if (hasError) {
+      return;
+    }
+
+    await _authStore.login(
+      _identifierController.text,
+      password: _passwordController.text,
+    );
+
     if (_authStore.error == null && mounted) {
-      context.go('/otp-verification');
+      context.go('/otp-verification', extra: _identifierController.text);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 48),
-              Text(
-                'Welcome to Recliq',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
+      backgroundColor: AppTheme.darkBackground,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: AppTheme.darkBackground,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => context.go('/auth-gate'),
+        ),
+        title: const Text(
+          'Welcome Back',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              "Sign in to your account to continue your recycling journey.",
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 16,
+                height: 1.4,
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Start earning by recycling today',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.7),
-                    ),
-              ),
-              const SizedBox(height: 48),
-              TextField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  labelText: 'Phone Number',
-                  hintText: 'Enter your phone number',
-                  prefixIcon: Icon(
-                    Icons.phone,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+            ),
+            const SizedBox(height: 40),
+            CustomTextField(
+              label: "Email",
+              hint: "Enter your email",
+              icon: Icons.person_outline,
+              controller: _identifierController,
+              errorText: _identifierError,
+              onChanged: (value) {
+                if (_identifierError != null) {
+                  setState(() {
+                    _identifierError = null;
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            CustomTextField(
+              label: "Password",
+              hint: "••••••••",
+              icon: Icons.lock_outline,
+              controller: _passwordController,
+              isPassword: true,
+              errorText: _passwordError,
+              onChanged: (value) {
+                if (_passwordError != null) {
+                  setState(() {
+                    _passwordError = null;
+                  });
+                }
+              },
+            ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  context.go('/forgot-password');
+                },
+                child: const Text(
+                  "Forgot Password?",
+                  style: TextStyle(
+                    color: AppTheme.primaryGreen,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              Observer(
-                builder: (_) => ElevatedButton(
+            ),
+            const SizedBox(height: 32),
+            Observer(
+              builder: (_) => SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: ElevatedButton(
                   onPressed: _authStore.isLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    minimumSize: const Size(double.infinity, 56),
+                    backgroundColor: AppTheme.primaryGreen,
+                    disabledBackgroundColor: Colors.grey.withOpacity(0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: _authStore.isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Continue'),
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        )
+                      : const Text(
+                          "Sign In",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
-              if (_authStore.error != null) ...[
-                const SizedBox(height: 16),
-                Text(
-                  _authStore.error!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.error,
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              "or continue with",
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: OutlinedButton(
+                onPressed: () => context.go('/signup'),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.white24),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ],
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Don\'t have an account? ',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  TextButton(
-                    onPressed: () => context.go('/signup'),
-                    child: Text(
-                      'Sign up',
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      FontAwesomeIcons.envelope,
+                      color: Colors.white70,
+                      size: 18,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      "Create New Account",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 40),
+            Center(
+              child: RichText(
+                text: const TextSpan(
+                  text: "By signing in, you agree to our ",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "Terms of Service",
+                      style: TextStyle(
+                        color: AppTheme.primaryGreen,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    TextSpan(text: " and "),
+                    TextSpan(
+                      text: "Privacy Policy",
+                      style: TextStyle(
+                        color: AppTheme.primaryGreen,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -29,9 +29,13 @@ dependencies:
   shared_preferences: ^2.2.0
   
   # UI Components
-  google_fonts: ^5.1.0
+  flutter_screenutil: ^5.9.0
+  font_awesome_flutter: ^10.7.0
   flutter_svg: ^2.0.7
   cached_network_image: ^3.2.3
+  fluttertoast: ^8.2.4
+  lottie: ^2.7.0
+  syncfusion_flutter_datepicker: ^32.1.21
   
   # Utils
   intl: ^0.20.2
@@ -39,6 +43,9 @@ dependencies:
   dio: ^5.3.2
   json_annotation: ^4.8.1
   freezed_annotation: ^2.4.1
+  dartz: ^0.10.1
+  image_picker: ^1.0.4
+  internet_connection_checker: ^3.0.1
   
 dev_dependencies:
   flutter_test:
@@ -49,6 +56,13 @@ dev_dependencies:
   json_serializable: ^6.7.1
   freezed: ^2.4.2
   flutter_lints: ^2.0.2
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app-icon.png"
+  remove_alpha_ios: true
 
 flutter:
   uses-material-design: true
@@ -57,3 +71,4 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+    - assets/lottie/

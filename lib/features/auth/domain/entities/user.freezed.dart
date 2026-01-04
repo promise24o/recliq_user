@@ -21,12 +21,16 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   String get id => throw _privateConstructorUsedError;
-  String get phoneNumber => throw _privateConstructorUsedError;
+  @JsonKey(name: 'phone')
+  String? get phoneNumber => throw _privateConstructorUsedError;
   String? get email => throw _privateConstructorUsedError;
   String? get name => throw _privateConstructorUsedError;
+  String? get role => throw _privateConstructorUsedError;
   bool get isVerified => throw _privateConstructorUsedError;
+  bool get hasPin => throw _privateConstructorUsedError;
   double get walletBalance => throw _privateConstructorUsedError;
-  String? get profileImageUrl => throw _privateConstructorUsedError;
+  String? get profilePhoto => throw _privateConstructorUsedError;
+  String? get referralCode => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -44,12 +48,15 @@ abstract class $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String phoneNumber,
+      @JsonKey(name: 'phone') String? phoneNumber,
       String? email,
       String? name,
+      String? role,
       bool isVerified,
+      bool hasPin,
       double walletBalance,
-      String? profileImageUrl});
+      String? profilePhoto,
+      String? referralCode});
 }
 
 /// @nodoc
@@ -68,22 +75,25 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @override
   $Res call({
     Object? id = null,
-    Object? phoneNumber = null,
+    Object? phoneNumber = freezed,
     Object? email = freezed,
     Object? name = freezed,
+    Object? role = freezed,
     Object? isVerified = null,
+    Object? hasPin = null,
     Object? walletBalance = null,
-    Object? profileImageUrl = freezed,
+    Object? profilePhoto = freezed,
+    Object? referralCode = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      phoneNumber: null == phoneNumber
+      phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -92,17 +102,29 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasPin: null == hasPin
+          ? _value.hasPin
+          : hasPin // ignore: cast_nullable_to_non_nullable
               as bool,
       walletBalance: null == walletBalance
           ? _value.walletBalance
           : walletBalance // ignore: cast_nullable_to_non_nullable
               as double,
-      profileImageUrl: freezed == profileImageUrl
-          ? _value.profileImageUrl
-          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+      profilePhoto: freezed == profilePhoto
+          ? _value.profilePhoto
+          : profilePhoto // ignore: cast_nullable_to_non_nullable
+              as String?,
+      referralCode: freezed == referralCode
+          ? _value.referralCode
+          : referralCode // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -117,12 +139,15 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String phoneNumber,
+      @JsonKey(name: 'phone') String? phoneNumber,
       String? email,
       String? name,
+      String? role,
       bool isVerified,
+      bool hasPin,
       double walletBalance,
-      String? profileImageUrl});
+      String? profilePhoto,
+      String? referralCode});
 }
 
 /// @nodoc
@@ -138,22 +163,25 @@ class __$$UserImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? phoneNumber = null,
+    Object? phoneNumber = freezed,
     Object? email = freezed,
     Object? name = freezed,
+    Object? role = freezed,
     Object? isVerified = null,
+    Object? hasPin = null,
     Object? walletBalance = null,
-    Object? profileImageUrl = freezed,
+    Object? profilePhoto = freezed,
+    Object? referralCode = freezed,
   }) {
     return _then(_$UserImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      phoneNumber: null == phoneNumber
+      phoneNumber: freezed == phoneNumber
           ? _value.phoneNumber
           : phoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
@@ -162,17 +190,29 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
       isVerified: null == isVerified
           ? _value.isVerified
           : isVerified // ignore: cast_nullable_to_non_nullable
+              as bool,
+      hasPin: null == hasPin
+          ? _value.hasPin
+          : hasPin // ignore: cast_nullable_to_non_nullable
               as bool,
       walletBalance: null == walletBalance
           ? _value.walletBalance
           : walletBalance // ignore: cast_nullable_to_non_nullable
               as double,
-      profileImageUrl: freezed == profileImageUrl
-          ? _value.profileImageUrl
-          : profileImageUrl // ignore: cast_nullable_to_non_nullable
+      profilePhoto: freezed == profilePhoto
+          ? _value.profilePhoto
+          : profilePhoto // ignore: cast_nullable_to_non_nullable
+              as String?,
+      referralCode: freezed == referralCode
+          ? _value.referralCode
+          : referralCode // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -183,12 +223,15 @@ class __$$UserImplCopyWithImpl<$Res>
 class _$UserImpl implements _User {
   const _$UserImpl(
       {required this.id,
-      required this.phoneNumber,
+      @JsonKey(name: 'phone') this.phoneNumber,
       this.email,
       this.name,
+      this.role,
       this.isVerified = false,
+      this.hasPin = false,
       this.walletBalance = 0.0,
-      this.profileImageUrl});
+      this.profilePhoto,
+      this.referralCode});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -196,23 +239,31 @@ class _$UserImpl implements _User {
   @override
   final String id;
   @override
-  final String phoneNumber;
+  @JsonKey(name: 'phone')
+  final String? phoneNumber;
   @override
   final String? email;
   @override
   final String? name;
   @override
+  final String? role;
+  @override
   @JsonKey()
   final bool isVerified;
   @override
   @JsonKey()
+  final bool hasPin;
+  @override
+  @JsonKey()
   final double walletBalance;
   @override
-  final String? profileImageUrl;
+  final String? profilePhoto;
+  @override
+  final String? referralCode;
 
   @override
   String toString() {
-    return 'User(id: $id, phoneNumber: $phoneNumber, email: $email, name: $name, isVerified: $isVerified, walletBalance: $walletBalance, profileImageUrl: $profileImageUrl)';
+    return 'User(id: $id, phoneNumber: $phoneNumber, email: $email, name: $name, role: $role, isVerified: $isVerified, hasPin: $hasPin, walletBalance: $walletBalance, profilePhoto: $profilePhoto, referralCode: $referralCode)';
   }
 
   @override
@@ -225,18 +276,22 @@ class _$UserImpl implements _User {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.role, role) || other.role == role) &&
             (identical(other.isVerified, isVerified) ||
                 other.isVerified == isVerified) &&
+            (identical(other.hasPin, hasPin) || other.hasPin == hasPin) &&
             (identical(other.walletBalance, walletBalance) ||
                 other.walletBalance == walletBalance) &&
-            (identical(other.profileImageUrl, profileImageUrl) ||
-                other.profileImageUrl == profileImageUrl));
+            (identical(other.profilePhoto, profilePhoto) ||
+                other.profilePhoto == profilePhoto) &&
+            (identical(other.referralCode, referralCode) ||
+                other.referralCode == referralCode));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, phoneNumber, email, name,
-      isVerified, walletBalance, profileImageUrl);
+      role, isVerified, hasPin, walletBalance, profilePhoto, referralCode);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -257,29 +312,39 @@ class _$UserImpl implements _User {
 abstract class _User implements User {
   const factory _User(
       {required final String id,
-      required final String phoneNumber,
+      @JsonKey(name: 'phone') final String? phoneNumber,
       final String? email,
       final String? name,
+      final String? role,
       final bool isVerified,
+      final bool hasPin,
       final double walletBalance,
-      final String? profileImageUrl}) = _$UserImpl;
+      final String? profilePhoto,
+      final String? referralCode}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
   @override
   String get id;
   @override
-  String get phoneNumber;
+  @JsonKey(name: 'phone')
+  String? get phoneNumber;
   @override
   String? get email;
   @override
   String? get name;
   @override
+  String? get role;
+  @override
   bool get isVerified;
+  @override
+  bool get hasPin;
   @override
   double get walletBalance;
   @override
-  String? get profileImageUrl;
+  String? get profilePhoto;
+  @override
+  String? get referralCode;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

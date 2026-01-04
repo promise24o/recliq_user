@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppConfig {
   static const String appName = 'Recliq';
-  static const String baseUrl = 'https://api.recliq.com'; // Mock API URL
+  static const String baseUrl = 'http://localhost:5001'; // Mock API URL
 
   // API Endpoints
   static const String loginEndpoint = '/auth/login';

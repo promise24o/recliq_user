@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:provider/provider.dart';
-import 'core/config/app_config.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'core/di/service_locator.dart';
 import 'shared/themes/app_theme.dart';
 import 'shared/routes/app_router.dart';
@@ -17,12 +15,19 @@ class RecliqApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Recliq',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      routerConfig: AppRouter.router,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // iPhone X dimensions as base
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return MaterialApp.router(
+          title: 'Recliq',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.theme,
+          themeMode: ThemeMode.dark,
+          routerConfig: AppRouter.router,
+        );
+      },
     );
   }
 }

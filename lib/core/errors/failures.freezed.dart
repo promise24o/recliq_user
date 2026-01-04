@@ -16,33 +16,40 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$Failure {
+  String? get message => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) =>
@@ -53,7 +60,9 @@ mixin _$Failure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -63,7 +72,9 @@ mixin _$Failure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -73,17 +84,26 @@ mixin _$Failure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $FailureCopyWith<Failure> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $FailureCopyWith<$Res> {
   factory $FailureCopyWith(Failure value, $Res Function(Failure) then) =
       _$FailureCopyWithImpl<$Res, Failure>;
+  @useResult
+  $Res call({String? message});
 }
 
 /// @nodoc
@@ -98,13 +118,27 @@ class _$FailureCopyWithImpl<$Res, $Val extends Failure>
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_value.copyWith(
+      message: freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$ServerFailureImplCopyWith<$Res> {
+abstract class _$$ServerFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$ServerFailureImplCopyWith(
           _$ServerFailureImpl value, $Res Function(_$ServerFailureImpl) then) =
       __$$ServerFailureImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({String? message});
 }
@@ -169,10 +203,12 @@ class _$ServerFailureImpl implements ServerFailure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
     return serverError(message);
@@ -182,10 +218,12 @@ class _$ServerFailureImpl implements ServerFailure {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
     return serverError?.call(message);
@@ -195,10 +233,12 @@ class _$ServerFailureImpl implements ServerFailure {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -215,7 +255,9 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return serverError(this);
@@ -228,7 +270,9 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return serverError?.call(this);
@@ -241,7 +285,9 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -255,20 +301,26 @@ class _$ServerFailureImpl implements ServerFailure {
 abstract class ServerFailure implements Failure {
   const factory ServerFailure([final String? message]) = _$ServerFailureImpl;
 
+  @override
   String? get message;
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ServerFailureImplCopyWith<_$ServerFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NetworkFailureImplCopyWith<$Res> {
+abstract class _$$NetworkFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$NetworkFailureImplCopyWith(_$NetworkFailureImpl value,
           $Res Function(_$NetworkFailureImpl) then) =
       __$$NetworkFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
 }
 
 /// @nodoc
@@ -281,66 +333,98 @@ class __$$NetworkFailureImplCopyWithImpl<$Res>
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$NetworkFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$NetworkFailureImpl implements NetworkFailure {
-  const _$NetworkFailureImpl();
+  const _$NetworkFailureImpl([this.message]);
+
+  @override
+  final String? message;
 
   @override
   String toString() {
-    return 'Failure.networkError()';
+    return 'Failure.networkError(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$NetworkFailureImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$NetworkFailureImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NetworkFailureImplCopyWith<_$NetworkFailureImpl> get copyWith =>
+      __$$NetworkFailureImplCopyWithImpl<_$NetworkFailureImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
-    return networkError();
+    return networkError(message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
-    return networkError?.call();
+    return networkError?.call(message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
     if (networkError != null) {
-      return networkError();
+      return networkError(message);
     }
     return orElse();
   }
@@ -352,7 +436,9 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return networkError(this);
@@ -365,7 +451,9 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return networkError?.call(this);
@@ -378,7 +466,9 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -390,14 +480,26 @@ class _$NetworkFailureImpl implements NetworkFailure {
 }
 
 abstract class NetworkFailure implements Failure {
-  const factory NetworkFailure() = _$NetworkFailureImpl;
+  const factory NetworkFailure([final String? message]) = _$NetworkFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NetworkFailureImplCopyWith<_$NetworkFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$InvalidInputFailureImplCopyWith<$Res> {
+abstract class _$$InvalidInputFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$InvalidInputFailureImplCopyWith(_$InvalidInputFailureImpl value,
           $Res Function(_$InvalidInputFailureImpl) then) =
       __$$InvalidInputFailureImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({String? message});
 }
@@ -463,10 +565,12 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
     return invalidInput(message);
@@ -476,10 +580,12 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
     return invalidInput?.call(message);
@@ -489,10 +595,12 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -509,7 +617,9 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return invalidInput(this);
@@ -522,7 +632,9 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return invalidInput?.call(this);
@@ -535,7 +647,9 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -550,20 +664,26 @@ abstract class InvalidInputFailure implements Failure {
   const factory InvalidInputFailure([final String? message]) =
       _$InvalidInputFailureImpl;
 
+  @override
   String? get message;
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$InvalidInputFailureImplCopyWith<_$InvalidInputFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$UnauthorizedFailureImplCopyWith<$Res> {
+abstract class _$$UnauthorizedFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$UnauthorizedFailureImplCopyWith(_$UnauthorizedFailureImpl value,
           $Res Function(_$UnauthorizedFailureImpl) then) =
       __$$UnauthorizedFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
 }
 
 /// @nodoc
@@ -576,67 +696,98 @@ class __$$UnauthorizedFailureImplCopyWithImpl<$Res>
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$UnauthorizedFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
-  const _$UnauthorizedFailureImpl();
+  const _$UnauthorizedFailureImpl([this.message]);
+
+  @override
+  final String? message;
 
   @override
   String toString() {
-    return 'Failure.unauthorized()';
+    return 'Failure.unauthorized(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$UnauthorizedFailureImpl);
+            other is _$UnauthorizedFailureImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UnauthorizedFailureImplCopyWith<_$UnauthorizedFailureImpl> get copyWith =>
+      __$$UnauthorizedFailureImplCopyWithImpl<_$UnauthorizedFailureImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
-    return unauthorized();
+    return unauthorized(message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
-    return unauthorized?.call();
+    return unauthorized?.call(message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
     if (unauthorized != null) {
-      return unauthorized();
+      return unauthorized(message);
     }
     return orElse();
   }
@@ -648,7 +799,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return unauthorized(this);
@@ -661,7 +814,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return unauthorized?.call(this);
@@ -674,7 +829,9 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -686,14 +843,211 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
 }
 
 abstract class UnauthorizedFailure implements Failure {
-  const factory UnauthorizedFailure() = _$UnauthorizedFailureImpl;
+  const factory UnauthorizedFailure([final String? message]) =
+      _$UnauthorizedFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UnauthorizedFailureImplCopyWith<_$UnauthorizedFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$NotFoundFailureImplCopyWith<$Res> {
+abstract class _$$ForbiddenFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$ForbiddenFailureImplCopyWith(_$ForbiddenFailureImpl value,
+          $Res Function(_$ForbiddenFailureImpl) then) =
+      __$$ForbiddenFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$ForbiddenFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$ForbiddenFailureImpl>
+    implements _$$ForbiddenFailureImplCopyWith<$Res> {
+  __$$ForbiddenFailureImplCopyWithImpl(_$ForbiddenFailureImpl _value,
+      $Res Function(_$ForbiddenFailureImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$ForbiddenFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ForbiddenFailureImpl implements ForbiddenFailure {
+  const _$ForbiddenFailureImpl([this.message]);
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.forbidden(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ForbiddenFailureImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ForbiddenFailureImplCopyWith<_$ForbiddenFailureImpl> get copyWith =>
+      __$$ForbiddenFailureImplCopyWithImpl<_$ForbiddenFailureImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message) serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) invalidInput,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpected,
+  }) {
+    return forbidden(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message)? serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? invalidInput,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpected,
+  }) {
+    return forbidden?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message)? serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? invalidInput,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (forbidden != null) {
+      return forbidden(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverError,
+    required TResult Function(NetworkFailure value) networkError,
+    required TResult Function(InvalidInputFailure value) invalidInput,
+    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(UnexpectedFailure value) unexpected,
+  }) {
+    return forbidden(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverError,
+    TResult? Function(NetworkFailure value)? networkError,
+    TResult? Function(InvalidInputFailure value)? invalidInput,
+    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(UnexpectedFailure value)? unexpected,
+  }) {
+    return forbidden?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverError,
+    TResult Function(NetworkFailure value)? networkError,
+    TResult Function(InvalidInputFailure value)? invalidInput,
+    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
+    TResult Function(UnexpectedFailure value)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (forbidden != null) {
+      return forbidden(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ForbiddenFailure implements Failure {
+  const factory ForbiddenFailure([final String? message]) =
+      _$ForbiddenFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ForbiddenFailureImplCopyWith<_$ForbiddenFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$NotFoundFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$NotFoundFailureImplCopyWith(_$NotFoundFailureImpl value,
           $Res Function(_$NotFoundFailureImpl) then) =
       __$$NotFoundFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
 }
 
 /// @nodoc
@@ -706,66 +1060,98 @@ class __$$NotFoundFailureImplCopyWithImpl<$Res>
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$NotFoundFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$NotFoundFailureImpl implements NotFoundFailure {
-  const _$NotFoundFailureImpl();
+  const _$NotFoundFailureImpl([this.message]);
+
+  @override
+  final String? message;
 
   @override
   String toString() {
-    return 'Failure.notFound()';
+    return 'Failure.notFound(message: $message)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$NotFoundFailureImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$NotFoundFailureImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NotFoundFailureImplCopyWith<_$NotFoundFailureImpl> get copyWith =>
+      __$$NotFoundFailureImplCopyWithImpl<_$NotFoundFailureImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
-    return notFound();
+    return notFound(message);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
-    return notFound?.call();
+    return notFound?.call(message);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
     if (notFound != null) {
-      return notFound();
+      return notFound(message);
     }
     return orElse();
   }
@@ -777,7 +1163,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return notFound(this);
@@ -790,7 +1178,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return notFound?.call(this);
@@ -803,7 +1193,9 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -815,14 +1207,207 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
 }
 
 abstract class NotFoundFailure implements Failure {
-  const factory NotFoundFailure() = _$NotFoundFailureImpl;
+  const factory NotFoundFailure([final String? message]) =
+      _$NotFoundFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NotFoundFailureImplCopyWith<_$NotFoundFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$UnexpectedFailureImplCopyWith<$Res> {
+abstract class _$$CacheFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$CacheFailureImplCopyWith(
+          _$CacheFailureImpl value, $Res Function(_$CacheFailureImpl) then) =
+      __$$CacheFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$CacheFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$CacheFailureImpl>
+    implements _$$CacheFailureImplCopyWith<$Res> {
+  __$$CacheFailureImplCopyWithImpl(
+      _$CacheFailureImpl _value, $Res Function(_$CacheFailureImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$CacheFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CacheFailureImpl implements CacheFailure {
+  const _$CacheFailureImpl([this.message]);
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.cacheError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CacheFailureImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CacheFailureImplCopyWith<_$CacheFailureImpl> get copyWith =>
+      __$$CacheFailureImplCopyWithImpl<_$CacheFailureImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message) serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) invalidInput,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) unexpected,
+  }) {
+    return cacheError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message)? serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? invalidInput,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? unexpected,
+  }) {
+    return cacheError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message)? serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? invalidInput,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (cacheError != null) {
+      return cacheError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverError,
+    required TResult Function(NetworkFailure value) networkError,
+    required TResult Function(InvalidInputFailure value) invalidInput,
+    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(UnexpectedFailure value) unexpected,
+  }) {
+    return cacheError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverError,
+    TResult? Function(NetworkFailure value)? networkError,
+    TResult? Function(InvalidInputFailure value)? invalidInput,
+    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(UnexpectedFailure value)? unexpected,
+  }) {
+    return cacheError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverError,
+    TResult Function(NetworkFailure value)? networkError,
+    TResult Function(InvalidInputFailure value)? invalidInput,
+    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
+    TResult Function(UnexpectedFailure value)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (cacheError != null) {
+      return cacheError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CacheFailure implements Failure {
+  const factory CacheFailure([final String? message]) = _$CacheFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CacheFailureImplCopyWith<_$CacheFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UnexpectedFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
   factory _$$UnexpectedFailureImplCopyWith(_$UnexpectedFailureImpl value,
           $Res Function(_$UnexpectedFailureImpl) then) =
       __$$UnexpectedFailureImplCopyWithImpl<$Res>;
+  @override
   @useResult
   $Res call({String? message});
 }
@@ -888,10 +1473,12 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String? message) serverError,
-    required TResult Function() networkError,
+    required TResult Function(String? message) networkError,
     required TResult Function(String? message) invalidInput,
-    required TResult Function() unauthorized,
-    required TResult Function() notFound,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
     required TResult Function(String? message) unexpected,
   }) {
     return unexpected(message);
@@ -901,10 +1488,12 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String? message)? serverError,
-    TResult? Function()? networkError,
+    TResult? Function(String? message)? networkError,
     TResult? Function(String? message)? invalidInput,
-    TResult? Function()? unauthorized,
-    TResult? Function()? notFound,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
     TResult? Function(String? message)? unexpected,
   }) {
     return unexpected?.call(message);
@@ -914,10 +1503,12 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String? message)? serverError,
-    TResult Function()? networkError,
+    TResult Function(String? message)? networkError,
     TResult Function(String? message)? invalidInput,
-    TResult Function()? unauthorized,
-    TResult Function()? notFound,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -934,7 +1525,9 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     required TResult Function(NetworkFailure value) networkError,
     required TResult Function(InvalidInputFailure value) invalidInput,
     required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return unexpected(this);
@@ -947,7 +1540,9 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult? Function(NetworkFailure value)? networkError,
     TResult? Function(InvalidInputFailure value)? invalidInput,
     TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return unexpected?.call(this);
@@ -960,7 +1555,9 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult Function(NetworkFailure value)? networkError,
     TResult Function(InvalidInputFailure value)? invalidInput,
     TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -975,10 +1572,12 @@ abstract class UnexpectedFailure implements Failure {
   const factory UnexpectedFailure([final String? message]) =
       _$UnexpectedFailureImpl;
 
+  @override
   String? get message;
 
   /// Create a copy of Failure
   /// with the given fields replaced by the non-null parameter values.
+  @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UnexpectedFailureImplCopyWith<_$UnexpectedFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
