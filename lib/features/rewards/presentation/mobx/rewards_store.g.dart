@@ -398,6 +398,15 @@ mixin _$RewardsStore on _RewardsStore, Store {
     return _$loadReferralAsyncAction.run(() => super.loadReferral());
   }
 
+  late final _$redeemReferralAsyncAction =
+      AsyncAction('_RewardsStore.redeemReferral', context: context);
+
+  @override
+  Future<RedeemReferralResponse?> redeemReferral(List<String>? referralIds) {
+    return _$redeemReferralAsyncAction
+        .run(() => super.redeemReferral(referralIds));
+  }
+
   late final _$loadRewardBenefitsAsyncAction =
       AsyncAction('_RewardsStore.loadRewardBenefits', context: context);
 

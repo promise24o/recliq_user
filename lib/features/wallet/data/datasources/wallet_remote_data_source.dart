@@ -4,8 +4,10 @@ import '../models/bank_account_model.dart';
 import '../models/bank_model.dart';
 import '../models/earnings_model.dart';
 import '../../domain/repositories/wallet_repository.dart';
+import '../../domain/entities/wallet_overview_response.dart';
 
 abstract class WalletRemoteDataSource {
+  Future<WalletOverviewResponse> getWalletOverview();
   Future<EarningsModel> getEarnings();
   Future<double> getAvailableBalance();
   Future<TransactionListResponse> getTransactions({
@@ -123,6 +125,32 @@ class WalletRemoteDataSourceImpl implements WalletRemoteDataSource {
       status: 'completed',
     ),
   ];
+
+  @override
+  Future<WalletOverviewResponse> getWalletOverview() async {
+    try {
+      final response = await _dio.get('/wallet/overview');
+
+      if (_isSuccessStatusCode(response.statusCode)) {
+        return WalletOverviewResponse.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load wallet overview');
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('Network timeout');
+      } else if (e.response?.statusCode == 401) {
+        throw Exception('Unauthorized - Please login again');
+      } else if (e.response?.statusCode == 500) {
+        throw Exception('Internal server error');
+      } else {
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load wallet overview: $e');
+    }
+  }
 
   @override
   Future<EarningsModel> getEarnings() async {

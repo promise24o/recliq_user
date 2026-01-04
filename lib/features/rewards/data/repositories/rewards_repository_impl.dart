@@ -11,6 +11,7 @@ import '../../domain/entities/badges_response.dart';
 import '../../domain/entities/environmental_impact_response.dart';
 import '../../domain/entities/challenges_response.dart';
 import '../../domain/entities/referral_response.dart';
+import '../../domain/entities/redeem_referral_response.dart';
 import '../../domain/repositories/rewards_repository.dart';
 import '../datasources/rewards_datasource.dart';
 
@@ -172,6 +173,17 @@ class RewardsRepositoryImpl implements RewardsRepository {
       return Right(result);
     } catch (e) {
       return Left('Failed to generate referral code: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, RedeemReferralResponse>> redeemReferral(
+      List<String>? referralIds) async {
+    try {
+      final result = await dataSource.redeemReferral(referralIds);
+      return Right(result);
+    } catch (e) {
+      return Left('Failed to redeem referrals: ${e.toString()}');
     }
   }
 }

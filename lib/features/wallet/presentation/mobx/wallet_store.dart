@@ -2,7 +2,9 @@ import 'package:mobx/mobx.dart';
 import '../../domain/entities/transaction.dart';
 import '../../domain/entities/bank_account.dart';
 import '../../domain/entities/earnings.dart';
+import '../../domain/entities/wallet_overview_response.dart';
 import '../../domain/repositories/wallet_repository.dart';
+import '../../domain/usecases/get_wallet_overview.dart';
 import 'mock_wallet_repository.dart';
 
 part 'wallet_store.g.dart';
@@ -11,11 +13,17 @@ class WalletStore = _WalletStore with _$WalletStore;
 
 abstract class _WalletStore with Store {
   final WalletRepository _repository;
+  late final GetWalletOverview _getWalletOverview;
 
   _WalletStore({required WalletRepository repository})
-      : _repository = repository;
+      : _repository = repository {
+    _getWalletOverview = GetWalletOverview(_repository);
+  }
 
   // Observable state
+  @observable
+  WalletOverviewResponse? walletOverview;
+
   @observable
   Earnings? earnings;
 
@@ -27,6 +35,15 @@ abstract class _WalletStore with Store {
 
   @observable
   Map<String, dynamic>? rewards;
+
+  @observable
+  double availableBalance = 0.0;
+
+  @observable
+  double todayEarnings = 0.0;
+
+  @observable
+  double totalEarnings = 0.0;
 
   @observable
   String accountNumber = '**** **** **** 1234';
@@ -58,16 +75,15 @@ abstract class _WalletStore with Store {
   @observable
   String? pendingWithdrawalId;
 
+  @observable
+  bool isBalanceHidden = false;
+
+  @action
+  void toggleBalanceVisibility() {
+    isBalanceHidden = !isBalanceHidden;
+  }
+
   // Computed properties
-  @computed
-  double get availableBalance => earnings?.availableBalance ?? 0.0;
-
-  @computed
-  double get totalEarnings => earnings?.totalEarnings ?? 0.0;
-
-  @computed
-  double get todayEarnings => earnings?.todayEarnings ?? 0.0;
-
   @computed
   Transaction? get lastTransaction =>
       transactions.isNotEmpty ? transactions.first : null;
@@ -101,6 +117,37 @@ abstract class _WalletStore with Store {
   double get bonusCredits => rewards?['bonusCredits'] ?? 0.0;
 
   // Actions
+  @action
+  Future<void> loadWalletOverview({bool forceRefresh = false}) async {
+    try {
+      if (!forceRefresh && walletOverview != null) {
+        // Already have data, don't reload
+        return;
+      }
+
+      isLoading = true;
+      error = null;
+
+      final result = await _getWalletOverview();
+      result.fold(
+        (failure) => error = failure,
+        (overview) {
+          walletOverview = overview;
+          // Update legacy properties for backward compatibility
+          availableBalance = overview.availableBalance;
+          todayEarnings = overview.todayEarnings;
+          totalEarnings = overview.totalEarnings;
+          accountNumber = overview.accountNumber;
+          accountName = overview.accountName;
+        },
+      );
+    } catch (e) {
+      error = 'Failed to load wallet overview: $e';
+    } finally {
+      isLoading = false;
+    }
+  }
+
   @action
   Future<void> loadEarnings() async {
     try {

@@ -3,8 +3,12 @@ import '../entities/transaction.dart';
 import '../entities/bank_account.dart';
 import '../entities/bank.dart';
 import '../entities/earnings.dart';
+import '../entities/wallet_overview_response.dart';
 
 abstract class WalletRepository {
+  // Wallet Overview
+  Future<Either<Failure, WalletOverviewResponse>> getWalletOverview();
+
   // Balance and Earnings
   Future<Either<Failure, Earnings>> getEarnings();
   Future<Either<Failure, double>> getAvailableBalance();

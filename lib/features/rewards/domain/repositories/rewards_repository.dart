@@ -11,6 +11,7 @@ import '../entities/badges_response.dart';
 import '../entities/environmental_impact_response.dart';
 import '../entities/challenges_response.dart';
 import '../entities/referral_response.dart';
+import '../entities/redeem_referral_response.dart';
 
 abstract class RewardsRepository {
   Future<Either<String, RewardsOverview>> getRewardsOverview();
@@ -33,4 +34,6 @@ abstract class RewardsRepository {
       String challengeId, int progress);
   Future<Either<String, void>> redeemBenefit(String benefitId);
   Future<Either<String, String>> generateReferralCode();
+  Future<Either<String, RedeemReferralResponse>> redeemReferral(
+      List<String>? referralIds);
 }

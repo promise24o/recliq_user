@@ -23,6 +23,7 @@ class ReferralResponse with _$ReferralResponse {
   const factory ReferralResponse({
     required int totalReferrals,
     required int pointsEarned,
+    required int pointsRedeemed,
     required List<ReferralItem> recentReferrals,
   }) = _ReferralResponse;
 

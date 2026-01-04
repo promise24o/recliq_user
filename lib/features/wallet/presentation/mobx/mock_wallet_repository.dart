@@ -2,10 +2,17 @@ import '../../domain/entities/transaction.dart';
 import '../../domain/entities/earnings.dart';
 import '../../domain/entities/bank_account.dart';
 import '../../domain/entities/bank.dart';
+import '../../domain/entities/wallet_overview_response.dart';
 import '../../domain/repositories/wallet_repository.dart';
 import 'package:dartz/dartz.dart';
 
 class MockWalletRepository implements WalletRepository {
+  @override
+  Future<Either<Failure, WalletOverviewResponse>> getWalletOverview() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return Right(getMockWalletOverview());
+  }
+
   @override
   Future<Either<Failure, Earnings>> getEarnings() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -354,5 +361,17 @@ class MockWalletRepository implements WalletRepository {
       'level': 'Gold',
       'nextLevelPoints': 500,
     };
+  }
+
+  static WalletOverviewResponse getMockWalletOverview() {
+    return const WalletOverviewResponse(
+      availableBalance: 9000.0,
+      todayEarnings: 7000.0,
+      lastWithdrawnAmount: null,
+      accountNumber: '841220214778',
+      accountName: 'JOHN DANIELSS',
+      totalEarnings: 7000.0,
+      lastTransactionDate: null,
+    );
   }
 }

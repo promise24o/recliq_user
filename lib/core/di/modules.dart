@@ -18,6 +18,7 @@ import '../../features/wallet/data/repositories/wallet_repository_impl.dart';
 import '../../features/wallet/domain/repositories/wallet_repository.dart';
 import '../../features/wallet/data/datasources/wallet_remote_data_source.dart';
 import '../../features/wallet/data/datasources/wallet_local_data_source.dart';
+import '../../features/wallet/presentation/mobx/wallet_store.dart';
 import '../../features/rewards/data/repositories/rewards_repository_impl.dart';
 import '../../features/rewards/domain/repositories/rewards_repository.dart';
 import '../../features/rewards/data/datasources/rewards_datasource.dart';
@@ -85,6 +86,10 @@ abstract class ThirdPartyModules {
         remoteDataSource: remoteDataSource,
         localDataSource: localDataSource,
       );
+
+  @lazySingleton
+  WalletStore walletStore(WalletRepository walletRepository) =>
+      WalletStore(repository: walletRepository);
 
   @lazySingleton
   RewardsRemoteDataSource get rewardsRemoteDataSource =>

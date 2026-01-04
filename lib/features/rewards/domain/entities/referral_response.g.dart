@@ -33,6 +33,7 @@ _$ReferralResponseImpl _$$ReferralResponseImplFromJson(
     _$ReferralResponseImpl(
       totalReferrals: (json['totalReferrals'] as num).toInt(),
       pointsEarned: (json['pointsEarned'] as num).toInt(),
+      pointsRedeemed: (json['pointsRedeemed'] as num).toInt(),
       recentReferrals: (json['recentReferrals'] as List<dynamic>)
           .map((e) => ReferralItem.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -43,5 +44,6 @@ Map<String, dynamic> _$$ReferralResponseImplToJson(
     <String, dynamic>{
       'totalReferrals': instance.totalReferrals,
       'pointsEarned': instance.pointsEarned,
+      'pointsRedeemed': instance.pointsRedeemed,
       'recentReferrals': instance.recentReferrals,
     };

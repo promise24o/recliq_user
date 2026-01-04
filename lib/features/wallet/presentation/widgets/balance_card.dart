@@ -5,14 +5,14 @@ class BalanceCard extends StatelessWidget {
   const BalanceCard({
     super.key,
     required this.availableBalance,
-    required this.totalEarnings,
-    required this.todayEarnings,
+    required this.pendingAmount,
+    required this.lastPayoutAmount,
     this.isLoading = false,
   });
 
   final double availableBalance;
-  final double totalEarnings;
-  final double todayEarnings;
+  final double pendingAmount;
+  final double lastPayoutAmount;
   final bool isLoading;
 
   @override
@@ -40,11 +40,6 @@ class BalanceCard extends StatelessWidget {
             color: const Color(0xFF2CD158).withOpacity(0.3),
             blurRadius: 15,
             offset: const Offset(0, 5),
-          ),
-          BoxShadow(
-            color: Colors.white.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(-2, -2),
           ),
         ],
       ),
@@ -113,38 +108,50 @@ class BalanceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatItem(
-                        'Total Earnings',
-                        totalEarnings,
-                        Icons.trending_up,
-                      ),
-                    ),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                    Expanded(
-                      child: _buildStatItem(
-                        'Today\'s Earnings',
-                        todayEarnings,
-                        Icons.today,
-                      ),
-                    ),
-                  ],
+          Row(
+            children: [
+              Expanded(
+                child: _buildMiniStat(
+                  icon: Icons.hourglass_top,
+                  value: pendingAmount,
                 ),
-              ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildMiniStat(
+                  icon: Icons.check_circle_outline,
+                  value: lastPayoutAmount,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMiniStat({required IconData icon, required double value}) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: Colors.white.withOpacity(0.8),
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '₦${value.toStringAsFixed(2)}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -152,42 +159,7 @@ class BalanceCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String label, double value, IconData icon) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: Colors.white.withOpacity(0.8),
-              size: 16,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '₦${value.toStringAsFixed(2)}',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-
   void _copyBalance() {
     HapticFeedback.lightImpact();
-    // TODO: Show snackbar or implement copy functionality
   }
 }

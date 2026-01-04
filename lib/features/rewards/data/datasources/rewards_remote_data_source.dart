@@ -11,6 +11,7 @@ import '../../domain/entities/badges_response.dart';
 import '../../domain/entities/environmental_impact_response.dart';
 import '../../domain/entities/challenges_response.dart';
 import '../../domain/entities/referral_response.dart';
+import '../../domain/entities/redeem_referral_response.dart';
 
 abstract class RewardsRemoteDataSource {
   Future<RewardsOverview> getRewardsOverview();
@@ -31,6 +32,7 @@ abstract class RewardsRemoteDataSource {
   Future<void> updateChallengeProgress(String challengeId, int progress);
   Future<void> redeemBenefit(String benefitId);
   Future<String> generateReferralCode();
+  Future<RedeemReferralResponse> redeemReferral(List<String>? referralIds);
 }
 
 class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
@@ -45,24 +47,14 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   @override
   Future<RewardsOverview> getRewardsOverview() async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/overview endpoint");
       final response = await _dio.get('/rewards/overview');
 
-      print(
-          "RewardsRemoteDataSource: Response status code: ${response.statusCode}");
-      print("RewardsRemoteDataSource: Response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Got successful response");
-        final data = response.data;
-        return RewardsOverview.fromJson(data);
+        return RewardsOverview.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load rewards overview');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -74,7 +66,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load rewards overview: $e');
     }
   }
@@ -85,7 +76,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
     int offset = 0,
   }) async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/activity endpoint");
       final response = await _dio.get(
         '/rewards/activity',
         queryParameters: {
@@ -94,22 +84,12 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         },
       );
 
-      print(
-          "RewardsRemoteDataSource: Activity response status code: ${response.statusCode}");
-      print(
-          "RewardsRemoteDataSource: Activity response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Got successful activity response");
-        final data = response.data;
-        return ActivityFeedResponse.fromJson(data);
+        return ActivityFeedResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load activity feed');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -123,7 +103,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load activity feed: $e');
     }
   }
@@ -131,24 +110,14 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   @override
   Future<StreakResponse> getStreak() async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/streak endpoint");
       final response = await _dio.get('/rewards/streak');
 
-      print(
-          "RewardsRemoteDataSource: Streak response status code: ${response.statusCode}");
-      print("RewardsRemoteDataSource: Streak response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Got successful streak response");
-        final data = response.data;
-        return StreakResponse.fromJson(data);
+        return StreakResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load streak information');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -160,7 +129,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load streak information: $e');
     }
   }
@@ -168,24 +136,14 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   @override
   Future<BadgesResponse> getBadges() async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/badges endpoint");
       final response = await _dio.get('/rewards/badges');
 
-      print(
-          "RewardsRemoteDataSource: Badges response status code: ${response.statusCode}");
-      print("RewardsRemoteDataSource: Badges response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Got successful badges response");
-        final data = response.data;
-        return BadgesResponse.fromJson(data);
+        return BadgesResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load badges');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -197,7 +155,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load badges: $e');
     }
   }
@@ -205,26 +162,14 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   @override
   Future<EnvironmentalImpactResponse> getEnvironmentalImpact() async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/impact endpoint");
       final response = await _dio.get('/rewards/impact');
 
-      print(
-          "RewardsRemoteDataSource: Environmental impact response status code: ${response.statusCode}");
-      print(
-          "RewardsRemoteDataSource: Environmental impact response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print(
-            "RewardsRemoteDataSource: Got successful environmental impact response");
-        final data = response.data;
-        return EnvironmentalImpactResponse.fromJson(data);
+        return EnvironmentalImpactResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load environmental impact');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -236,7 +181,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load environmental impact: $e');
     }
   }
@@ -244,25 +188,14 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   @override
   Future<ChallengesResponse> getChallenges() async {
     try {
-      print("RewardsRemoteDataSource: Calling /rewards/challenges endpoint");
       final response = await _dio.get('/rewards/challenges');
 
-      print(
-          "RewardsRemoteDataSource: Challenges response status code: ${response.statusCode}");
-      print(
-          "RewardsRemoteDataSource: Challenges response data: ${response.data}");
-
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Got successful challenges response");
-        final data = response.data;
-        return ChallengesResponse.fromJson(data);
+        return ChallengesResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load challenges');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -274,7 +207,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load challenges: $e');
     }
   }
@@ -285,15 +217,11 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
       final response = await _dio.get('/rewards/referrals');
 
       if (_isSuccessStatusCode(response.statusCode)) {
-        print("RewardsRemoteDataSource: Referral data loaded successfully");
         return ReferralResponse.fromJson(response.data);
       } else {
-        print(
-            "RewardsRemoteDataSource: Server error with status: ${response.statusCode}");
         throw Exception('Failed to load referral information');
       }
     } on DioException catch (e) {
-      print("RewardsRemoteDataSource: DioException occurred: ${e.type}");
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw Exception('Network timeout');
@@ -305,7 +233,6 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      print("RewardsRemoteDataSource: Unexpected error: $e");
       throw Exception('Failed to load referral information: $e');
     }
   }
@@ -416,6 +343,33 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   }
 
   @override
+  Future<List<RewardBenefit>> getRewardBenefits() async {
+    try {
+      final response = await _dio.get('/rewards/benefits');
+
+      if (_isSuccessStatusCode(response.statusCode)) {
+        final List<dynamic> jsonData = response.data;
+        return jsonData.map((json) => RewardBenefit.fromJson(json)).toList();
+      } else {
+        throw Exception('Failed to load reward benefits');
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw Exception('Network timeout');
+      } else if (e.response?.statusCode == 401) {
+        throw Exception('Unauthorized - Please login again');
+      } else if (e.response?.statusCode == 500) {
+        throw Exception('Internal server error');
+      } else {
+        throw Exception('Network error: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load reward benefits: $e');
+    }
+  }
+
+  @override
   Future<String> generateReferralCode() async {
     try {
       final response = await _dio.post('/rewards/generate-referral');
@@ -442,15 +396,23 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
   }
 
   @override
-  Future<List<RewardBenefit>> getRewardBenefits() async {
+  Future<RedeemReferralResponse> redeemReferral(
+      List<String>? referralIds) async {
     try {
-      final response = await _dio.get('/rewards/benefits');
+      final Map<String, dynamic> data = {};
+      if (referralIds != null && referralIds.isNotEmpty) {
+        data['referralIds'] = referralIds;
+      }
+
+      final response = await _dio.post(
+        '/rewards/referrals/redeem',
+        data: data.isEmpty ? null : data,
+      );
 
       if (_isSuccessStatusCode(response.statusCode)) {
-        final List<dynamic> jsonData = response.data;
-        return jsonData.map((json) => RewardBenefit.fromJson(json)).toList();
+        return RedeemReferralResponse.fromJson(response.data);
       } else {
-        throw Exception('Failed to load reward benefits');
+        throw Exception('Failed to redeem referrals');
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
@@ -464,7 +426,7 @@ class RewardsRemoteDataSourceImpl implements RewardsRemoteDataSource {
         throw Exception('Network error: ${e.message}');
       }
     } catch (e) {
-      throw Exception('Failed to load reward benefits: $e');
+      throw Exception('Failed to redeem referrals: $e');
     }
   }
 

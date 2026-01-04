@@ -11,6 +11,7 @@ import '../../domain/entities/badges_response.dart';
 import '../../domain/entities/environmental_impact_response.dart';
 import '../../domain/entities/challenges_response.dart';
 import '../../domain/entities/referral_response.dart';
+import '../../domain/entities/redeem_referral_response.dart';
 import 'rewards_remote_data_source.dart';
 
 class RewardsDataSourceImpl implements RewardsDataSource {
@@ -216,5 +217,11 @@ class RewardsDataSourceImpl implements RewardsDataSource {
   Future<String> generateReferralCode() async {
     await Future.delayed(const Duration(milliseconds: 300));
     return 'RECLIQ${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}';
+  }
+
+  @override
+  Future<RedeemReferralResponse> redeemReferral(
+      List<String>? referralIds) async {
+    return await _remoteDataSource.redeemReferral(referralIds);
   }
 }

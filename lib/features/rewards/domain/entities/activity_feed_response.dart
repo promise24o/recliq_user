@@ -12,5 +12,10 @@ class ActivityFeedResponse with _$ActivityFeedResponse {
   }) = _ActivityFeedResponse;
 
   factory ActivityFeedResponse.fromJson(Map<String, dynamic> json) =>
-      _$ActivityFeedResponseFromJson(json);
+      ActivityFeedResponse(
+        activity: (json['activity'] as List<dynamic>)
+            .map((e) => RewardActivity.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        hasMore: json['hasMore'] as bool,
+      );
 }

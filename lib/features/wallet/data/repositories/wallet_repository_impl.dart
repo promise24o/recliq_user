@@ -4,6 +4,7 @@ import '../../domain/entities/transaction.dart';
 import '../../domain/entities/bank_account.dart';
 import '../../domain/entities/bank.dart';
 import '../../domain/entities/earnings.dart';
+import '../../domain/entities/wallet_overview_response.dart';
 import '../datasources/wallet_remote_data_source.dart';
 import '../datasources/wallet_local_data_source.dart';
 
@@ -15,6 +16,27 @@ class WalletRepositoryImpl implements WalletRepository {
     required this.remoteDataSource,
     required this.localDataSource,
   });
+
+  @override
+  Future<Either<Failure, WalletOverviewResponse>> getWalletOverview() async {
+    try {
+      // Try to get cached data first
+      // final cachedOverview = await localDataSource.getCachedWalletOverview();
+      // if (cachedOverview != null) {
+      //   return Right(cachedOverview);
+      // }
+
+      // If no cached data, fetch from remote
+      final overview = await remoteDataSource.getWalletOverview();
+
+      // Cache the response
+      await localDataSource.cacheWalletOverview(overview);
+
+      return Right(overview);
+    } catch (e) {
+      return Left(ServerFailure());
+    }
+  }
 
   @override
   Future<Either<Failure, List<Bank>>> getBanks() async {

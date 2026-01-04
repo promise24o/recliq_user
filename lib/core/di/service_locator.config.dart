@@ -62,6 +62,8 @@ import 'package:recliq_user/features/wallet/domain/repositories/wallet_repositor
     as _i1029;
 import 'package:recliq_user/features/wallet/presentation/mobx/bank_accounts_store.dart'
     as _i901;
+import 'package:recliq_user/features/wallet/presentation/mobx/wallet_store.dart'
+    as _i659;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -130,6 +132,8 @@ extension GetItInjectableX on _i174.GetIt {
             ));
     gh.factory<_i901.BankAccountsStore>(
         () => _i901.BankAccountsStore(gh<_i1029.WalletRepository>()));
+    gh.lazySingleton<_i659.WalletStore>(
+        () => thirdPartyModules.walletStore(gh<_i1029.WalletRepository>()));
     gh.factory<_i333.OnboardingSecureStorage>(() =>
         _i333.OnboardingSecureStorageImpl(
             gh<_i558.FlutterSecureStorage>(instanceName: 'secure_storage')));

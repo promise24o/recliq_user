@@ -13,6 +13,7 @@ class ImagePaths {
   static const String appIconWhite = 'assets/images/app-icon-white.png';
   static const String avatar = 'assets/images/avatar.png';
   static const String noResult = 'assets/images/no-result.png';
+  static const String cardPattern = 'assets/images/card-patterns.png';
 
   // Add more image paths as needed
 }

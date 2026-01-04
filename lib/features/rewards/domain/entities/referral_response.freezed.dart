@@ -278,6 +278,7 @@ ReferralResponse _$ReferralResponseFromJson(Map<String, dynamic> json) {
 mixin _$ReferralResponse {
   int get totalReferrals => throw _privateConstructorUsedError;
   int get pointsEarned => throw _privateConstructorUsedError;
+  int get pointsRedeemed => throw _privateConstructorUsedError;
   List<ReferralItem> get recentReferrals => throw _privateConstructorUsedError;
 
   /// Serializes this ReferralResponse to a JSON map.
@@ -299,6 +300,7 @@ abstract class $ReferralResponseCopyWith<$Res> {
   $Res call(
       {int totalReferrals,
       int pointsEarned,
+      int pointsRedeemed,
       List<ReferralItem> recentReferrals});
 }
 
@@ -319,6 +321,7 @@ class _$ReferralResponseCopyWithImpl<$Res, $Val extends ReferralResponse>
   $Res call({
     Object? totalReferrals = null,
     Object? pointsEarned = null,
+    Object? pointsRedeemed = null,
     Object? recentReferrals = null,
   }) {
     return _then(_value.copyWith(
@@ -329,6 +332,10 @@ class _$ReferralResponseCopyWithImpl<$Res, $Val extends ReferralResponse>
       pointsEarned: null == pointsEarned
           ? _value.pointsEarned
           : pointsEarned // ignore: cast_nullable_to_non_nullable
+              as int,
+      pointsRedeemed: null == pointsRedeemed
+          ? _value.pointsRedeemed
+          : pointsRedeemed // ignore: cast_nullable_to_non_nullable
               as int,
       recentReferrals: null == recentReferrals
           ? _value.recentReferrals
@@ -349,6 +356,7 @@ abstract class _$$ReferralResponseImplCopyWith<$Res>
   $Res call(
       {int totalReferrals,
       int pointsEarned,
+      int pointsRedeemed,
       List<ReferralItem> recentReferrals});
 }
 
@@ -367,6 +375,7 @@ class __$$ReferralResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? totalReferrals = null,
     Object? pointsEarned = null,
+    Object? pointsRedeemed = null,
     Object? recentReferrals = null,
   }) {
     return _then(_$ReferralResponseImpl(
@@ -377,6 +386,10 @@ class __$$ReferralResponseImplCopyWithImpl<$Res>
       pointsEarned: null == pointsEarned
           ? _value.pointsEarned
           : pointsEarned // ignore: cast_nullable_to_non_nullable
+              as int,
+      pointsRedeemed: null == pointsRedeemed
+          ? _value.pointsRedeemed
+          : pointsRedeemed // ignore: cast_nullable_to_non_nullable
               as int,
       recentReferrals: null == recentReferrals
           ? _value._recentReferrals
@@ -392,6 +405,7 @@ class _$ReferralResponseImpl implements _ReferralResponse {
   const _$ReferralResponseImpl(
       {required this.totalReferrals,
       required this.pointsEarned,
+      required this.pointsRedeemed,
       required final List<ReferralItem> recentReferrals})
       : _recentReferrals = recentReferrals;
 
@@ -402,6 +416,8 @@ class _$ReferralResponseImpl implements _ReferralResponse {
   final int totalReferrals;
   @override
   final int pointsEarned;
+  @override
+  final int pointsRedeemed;
   final List<ReferralItem> _recentReferrals;
   @override
   List<ReferralItem> get recentReferrals {
@@ -412,7 +428,7 @@ class _$ReferralResponseImpl implements _ReferralResponse {
 
   @override
   String toString() {
-    return 'ReferralResponse(totalReferrals: $totalReferrals, pointsEarned: $pointsEarned, recentReferrals: $recentReferrals)';
+    return 'ReferralResponse(totalReferrals: $totalReferrals, pointsEarned: $pointsEarned, pointsRedeemed: $pointsRedeemed, recentReferrals: $recentReferrals)';
   }
 
   @override
@@ -424,6 +440,8 @@ class _$ReferralResponseImpl implements _ReferralResponse {
                 other.totalReferrals == totalReferrals) &&
             (identical(other.pointsEarned, pointsEarned) ||
                 other.pointsEarned == pointsEarned) &&
+            (identical(other.pointsRedeemed, pointsRedeemed) ||
+                other.pointsRedeemed == pointsRedeemed) &&
             const DeepCollectionEquality()
                 .equals(other._recentReferrals, _recentReferrals));
   }
@@ -431,7 +449,7 @@ class _$ReferralResponseImpl implements _ReferralResponse {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, totalReferrals, pointsEarned,
-      const DeepCollectionEquality().hash(_recentReferrals));
+      pointsRedeemed, const DeepCollectionEquality().hash(_recentReferrals));
 
   /// Create a copy of ReferralResponse
   /// with the given fields replaced by the non-null parameter values.
@@ -454,6 +472,7 @@ abstract class _ReferralResponse implements ReferralResponse {
   const factory _ReferralResponse(
           {required final int totalReferrals,
           required final int pointsEarned,
+          required final int pointsRedeemed,
           required final List<ReferralItem> recentReferrals}) =
       _$ReferralResponseImpl;
 
@@ -464,6 +483,8 @@ abstract class _ReferralResponse implements ReferralResponse {
   int get totalReferrals;
   @override
   int get pointsEarned;
+  @override
+  int get pointsRedeemed;
   @override
   List<ReferralItem> get recentReferrals;
 

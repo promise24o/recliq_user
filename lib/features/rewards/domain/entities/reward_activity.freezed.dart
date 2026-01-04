@@ -24,6 +24,7 @@ mixin _$RewardActivity {
   int get points => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
+  @ActivityTypeConverter()
   ActivityType get type => throw _privateConstructorUsedError;
 
   /// Serializes this RewardActivity to a JSON map.
@@ -47,7 +48,7 @@ abstract class $RewardActivityCopyWith<$Res> {
       int points,
       String description,
       DateTime date,
-      ActivityType type});
+      @ActivityTypeConverter() ActivityType type});
 
   $ActivityTypeCopyWith<$Res> get type;
 }
@@ -121,7 +122,7 @@ abstract class _$$RewardActivityImplCopyWith<$Res>
       int points,
       String description,
       DateTime date,
-      ActivityType type});
+      @ActivityTypeConverter() ActivityType type});
 
   @override
   $ActivityTypeCopyWith<$Res> get type;
@@ -179,7 +180,7 @@ class _$RewardActivityImpl implements _RewardActivity {
       required this.points,
       required this.description,
       required this.date,
-      required this.type});
+      @ActivityTypeConverter() required this.type});
 
   factory _$RewardActivityImpl.fromJson(Map<String, dynamic> json) =>
       _$$RewardActivityImplFromJson(json);
@@ -193,6 +194,7 @@ class _$RewardActivityImpl implements _RewardActivity {
   @override
   final DateTime date;
   @override
+  @ActivityTypeConverter()
   final ActivityType type;
 
   @override
@@ -237,11 +239,12 @@ class _$RewardActivityImpl implements _RewardActivity {
 
 abstract class _RewardActivity implements RewardActivity {
   const factory _RewardActivity(
-      {required final String id,
-      required final int points,
-      required final String description,
-      required final DateTime date,
-      required final ActivityType type}) = _$RewardActivityImpl;
+          {required final String id,
+          required final int points,
+          required final String description,
+          required final DateTime date,
+          @ActivityTypeConverter() required final ActivityType type}) =
+      _$RewardActivityImpl;
 
   factory _RewardActivity.fromJson(Map<String, dynamic> json) =
       _$RewardActivityImpl.fromJson;
@@ -255,6 +258,7 @@ abstract class _RewardActivity implements RewardActivity {
   @override
   DateTime get date;
   @override
+  @ActivityTypeConverter()
   ActivityType get type;
 
   /// Create a copy of RewardActivity
@@ -263,25 +267,6 @@ abstract class _RewardActivity implements RewardActivity {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RewardActivityImplCopyWith<_$RewardActivityImpl> get copyWith =>
       throw _privateConstructorUsedError;
-}
-
-ActivityType _$ActivityTypeFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType']) {
-    case 'recyle':
-      return _Recyle.fromJson(json);
-    case 'streak':
-      return _Streak.fromJson(json);
-    case 'badge':
-      return _Badge.fromJson(json);
-    case 'challenge':
-      return _Challenge.fromJson(json);
-    case 'referral':
-      return _Referral.fromJson(json);
-
-    default:
-      throw CheckedFromJsonException(json, 'runtimeType', 'ActivityType',
-          'Invalid union type "${json['runtimeType']}"!');
-  }
 }
 
 /// @nodoc
@@ -342,9 +327,6 @@ mixin _$ActivityType {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
-
-  /// Serializes this ActivityType to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -388,15 +370,9 @@ class __$$RecyleImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$RecyleImpl implements _Recyle {
-  const _$RecyleImpl({final String? $type}) : $type = $type ?? 'recyle';
-
-  factory _$RecyleImpl.fromJson(Map<String, dynamic> json) =>
-      _$$RecyleImplFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  const _$RecyleImpl();
 
   @override
   String toString() {
@@ -409,7 +385,6 @@ class _$RecyleImpl implements _Recyle {
         (other.runtimeType == runtimeType && other is _$RecyleImpl);
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -492,19 +467,10 @@ class _$RecyleImpl implements _Recyle {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$RecyleImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Recyle implements ActivityType {
   const factory _Recyle() = _$RecyleImpl;
-
-  factory _Recyle.fromJson(Map<String, dynamic> json) = _$RecyleImpl.fromJson;
 }
 
 /// @nodoc
@@ -527,15 +493,9 @@ class __$$StreakImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$StreakImpl implements _Streak {
-  const _$StreakImpl({final String? $type}) : $type = $type ?? 'streak';
-
-  factory _$StreakImpl.fromJson(Map<String, dynamic> json) =>
-      _$$StreakImplFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  const _$StreakImpl();
 
   @override
   String toString() {
@@ -548,7 +508,6 @@ class _$StreakImpl implements _Streak {
         (other.runtimeType == runtimeType && other is _$StreakImpl);
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -631,19 +590,10 @@ class _$StreakImpl implements _Streak {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$StreakImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Streak implements ActivityType {
   const factory _Streak() = _$StreakImpl;
-
-  factory _Streak.fromJson(Map<String, dynamic> json) = _$StreakImpl.fromJson;
 }
 
 /// @nodoc
@@ -666,15 +616,9 @@ class __$$BadgeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$BadgeImpl implements _Badge {
-  const _$BadgeImpl({final String? $type}) : $type = $type ?? 'badge';
-
-  factory _$BadgeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$BadgeImplFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  const _$BadgeImpl();
 
   @override
   String toString() {
@@ -687,7 +631,6 @@ class _$BadgeImpl implements _Badge {
         (other.runtimeType == runtimeType && other is _$BadgeImpl);
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -770,19 +713,10 @@ class _$BadgeImpl implements _Badge {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$BadgeImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Badge implements ActivityType {
   const factory _Badge() = _$BadgeImpl;
-
-  factory _Badge.fromJson(Map<String, dynamic> json) = _$BadgeImpl.fromJson;
 }
 
 /// @nodoc
@@ -805,15 +739,9 @@ class __$$ChallengeImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ChallengeImpl implements _Challenge {
-  const _$ChallengeImpl({final String? $type}) : $type = $type ?? 'challenge';
-
-  factory _$ChallengeImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ChallengeImplFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  const _$ChallengeImpl();
 
   @override
   String toString() {
@@ -826,7 +754,6 @@ class _$ChallengeImpl implements _Challenge {
         (other.runtimeType == runtimeType && other is _$ChallengeImpl);
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -909,20 +836,10 @@ class _$ChallengeImpl implements _Challenge {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ChallengeImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Challenge implements ActivityType {
   const factory _Challenge() = _$ChallengeImpl;
-
-  factory _Challenge.fromJson(Map<String, dynamic> json) =
-      _$ChallengeImpl.fromJson;
 }
 
 /// @nodoc
@@ -945,15 +862,9 @@ class __$$ReferralImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$ReferralImpl implements _Referral {
-  const _$ReferralImpl({final String? $type}) : $type = $type ?? 'referral';
-
-  factory _$ReferralImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ReferralImplFromJson(json);
-
-  @JsonKey(name: 'runtimeType')
-  final String $type;
+  const _$ReferralImpl();
 
   @override
   String toString() {
@@ -966,7 +877,6 @@ class _$ReferralImpl implements _Referral {
         (other.runtimeType == runtimeType && other is _$ReferralImpl);
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => runtimeType.hashCode;
 
@@ -1049,18 +959,8 @@ class _$ReferralImpl implements _Referral {
     }
     return orElse();
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$ReferralImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Referral implements ActivityType {
   const factory _Referral() = _$ReferralImpl;
-
-  factory _Referral.fromJson(Map<String, dynamic> json) =
-      _$ReferralImpl.fromJson;
 }

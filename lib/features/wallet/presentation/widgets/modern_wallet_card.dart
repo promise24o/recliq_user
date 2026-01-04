@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../../core/constants/image_paths.dart';
+import '../mobx/wallet_store.dart';
 
-class ModernWalletCard extends StatelessWidget {
-  final double balance;
-  final double totalEarnings;
-  final double todayEarnings;
-  final String accountNumber;
-  final String accountName;
+class ModernWalletCard extends StatefulWidget {
+  final WalletStore walletStore;
 
   const ModernWalletCard({
     super.key,
-    required this.balance,
-    required this.totalEarnings,
-    required this.todayEarnings,
-    required this.accountNumber,
-    required this.accountName,
+    required this.walletStore,
   });
 
-  // Helper method to format number with commas
+  @override
+  State<ModernWalletCard> createState() => _ModernWalletCardState();
+}
+
+class _ModernWalletCardState extends State<ModernWalletCard> {
   String _formatNumber(double number) {
-    final parts = number.toStringAsFixed(0).split('.');
+    final parts = number.toStringAsFixed(2).split('.');
     final integerPart = parts[0];
     final buffer = StringBuffer();
 
@@ -30,261 +30,300 @@ class ModernWalletCard extends StatelessWidget {
       buffer.write(integerPart[i]);
     }
 
-    return buffer.toString();
+    return '${buffer.toString()}.${parts[1]}';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF1F6B43),
-            Color(0xFF2E8B57),
-            Color(0xFF3CB371),
-          ],
+  Widget _maskedBalance() => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(
+          6,
+          (index) => const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Icon(
+              FontAwesomeIcons.asterisk,
+              size: 20,
+              color: Colors.white,
+            ),
+          ),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1F6B43).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Decorative Pattern
-          Positioned(
-            right: -30,
-            top: -30,
-            child: Container(
-              width: 150,
-              height: 150,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
+      );
 
-          // Background Icons
-          Positioned(
-            right: 20,
-            top: 20,
-            child: Icon(
-              FontAwesomeIcons.wallet,
-              size: 40,
-              color: Colors.white.withOpacity(0.2),
-            ),
-          ),
-          Positioned(
-            right: 60,
-            bottom: 20,
-            child: Icon(
-              FontAwesomeIcons.chartLine,
-              size: 30,
-              color: Colors.white.withOpacity(0.15),
-            ),
-          ),
-
-          // Card Content
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Account Info with Icon
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Icon(
-                        FontAwesomeIcons.userCircle,
-                        size: 13,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(width: 9),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            accountName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.creditCard,
-                                size: 9,
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                '****${accountNumber.substring(accountNumber.length - 4)}',
-                                style: TextStyle(
-                                  color: Colors.white.withOpacity(0.8),
-                                  fontSize: 11,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const Spacer(),
-
-                // Balance Section with Icon
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Available Balance',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.nairaSign,
-                          size: 18,
-                          color: Colors.white.withOpacity(0.9),
-                        ),
-                        const SizedBox(width: 3),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: _formatNumber(balance),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -1,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    '.${balance.toStringAsFixed(2).split('.')[1]}',
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: -1,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 10),
-
-                // Stats Row with Icons - Better Aligned
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildStatWithIcon(
-                        icon: FontAwesomeIcons.chartLine,
-                        label: 'Total Earnings',
-                        value: totalEarnings,
-                      ),
-                      Container(
-                        width: 1,
-                        height: 28,
-                        color: Colors.white.withOpacity(0.2),
-                      ),
-                      _buildStatWithIcon(
-                        icon: FontAwesomeIcons.calendarDay,
-                        label: "Today's",
-                        value: todayEarnings,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+  void _copyAccountDetails() {
+    final accountDetails =
+        'Name: ${widget.walletStore.accountName}\nAccount Number: ${widget.walletStore.accountNumber}';
+    Clipboard.setData(ClipboardData(text: accountDetails));
+    HapticFeedback.lightImpact();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Account details copied!'),
+        backgroundColor: Color(0xFF1F6B43),
+        duration: Duration(seconds: 2),
       ),
     );
   }
 
-  Widget _buildStatWithIcon({
+  @override
+  Widget build(BuildContext context) {
+    return Observer(
+        builder: (context) => Container(
+              height: 210,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1F6B43),
+                    Color(0xFF2E8B57),
+                    Color(0xFF3CB371),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1F6B43).withOpacity(0.3),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
+              ),
+              child: Stack(
+                children: [
+                  // Card Pattern Background
+                  Positioned.fill(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        ImagePaths.cardPattern,
+                        fit: BoxFit.cover,
+                        color: Colors.white.withOpacity(0.05),
+                        colorBlendMode: BlendMode.overlay,
+                      ),
+                    ),
+                  ),
+                  // Content
+                  Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Account row
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.18),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                FontAwesomeIcons.user,
+                                size: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.walletStore.accountName,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          widget.walletStore.accountNumber,
+                                          style: TextStyle(
+                                            color:
+                                                Colors.white.withOpacity(0.85),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      GestureDetector(
+                                        onTap: _copyAccountDetails,
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                          child: const Icon(
+                                            Icons.copy,
+                                            size: 12,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const Spacer(),
+
+                        // Balance
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Available Balance',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                HapticFeedback.lightImpact();
+                                widget.walletStore.toggleBalanceVisibility();
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Icon(
+                                  widget.walletStore.isBalanceHidden
+                                      ? FontAwesomeIcons.eyeSlash
+                                      : FontAwesomeIcons.eye,
+                                  size: 12,
+                                  color: Colors.white.withOpacity(0.9),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              '₦',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            widget.walletStore.isBalanceHidden
+                                ? _maskedBalance()
+                                : Text(
+                                    _formatNumber(
+                                        widget.walletStore.availableBalance),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: -1,
+                                    ),
+                                  ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        // Mini Stats with improved design
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildMiniStat(
+                                icon: FontAwesomeIcons.calendarDay,
+                                label: "Today's Earnings",
+                                value: widget.walletStore.todayEarnings,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _buildMiniStat(
+                                icon: FontAwesomeIcons.arrowDown,
+                                label: "Last Withdrawal",
+                                value: widget.walletStore.walletOverview
+                                        ?.lastWithdrawnAmount ??
+                                    0.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ));
+  }
+
+  Widget _buildMiniStat({
     required IconData icon,
     required String label,
     required double value,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Colors.white.withOpacity(0.8),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 0.5,
         ),
-        const SizedBox(height: 3),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 3),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              FontAwesomeIcons.nairaSign,
-              size: 10,
-              color: Colors.white.withOpacity(0.9),
-            ),
-            Text(
-              _formatNumber(value),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 12,
+                color: Colors.white.withOpacity(0.85),
               ),
+              const SizedBox(width: 4),
+              Icon(
+                FontAwesomeIcons.nairaSign,
+                size: 10,
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ],
+          ),
+          const SizedBox(height: 3),
+          Text(
+            _formatNumber(value),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
             ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(height: 1),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 9,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

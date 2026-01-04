@@ -9,27 +9,6 @@ part of 'wallet_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$WalletStore on _WalletStore, Store {
-  Computed<double>? _$availableBalanceComputed;
-
-  @override
-  double get availableBalance => (_$availableBalanceComputed ??=
-          Computed<double>(() => super.availableBalance,
-              name: '_WalletStore.availableBalance'))
-      .value;
-  Computed<double>? _$totalEarningsComputed;
-
-  @override
-  double get totalEarnings =>
-      (_$totalEarningsComputed ??= Computed<double>(() => super.totalEarnings,
-              name: '_WalletStore.totalEarnings'))
-          .value;
-  Computed<double>? _$todayEarningsComputed;
-
-  @override
-  double get todayEarnings =>
-      (_$todayEarningsComputed ??= Computed<double>(() => super.todayEarnings,
-              name: '_WalletStore.todayEarnings'))
-          .value;
   Computed<Transaction?>? _$lastTransactionComputed;
 
   @override
@@ -87,6 +66,22 @@ mixin _$WalletStore on _WalletStore, Store {
       (_$bonusCreditsComputed ??= Computed<double>(() => super.bonusCredits,
               name: '_WalletStore.bonusCredits'))
           .value;
+
+  late final _$walletOverviewAtom =
+      Atom(name: '_WalletStore.walletOverview', context: context);
+
+  @override
+  WalletOverviewResponse? get walletOverview {
+    _$walletOverviewAtom.reportRead();
+    return super.walletOverview;
+  }
+
+  @override
+  set walletOverview(WalletOverviewResponse? value) {
+    _$walletOverviewAtom.reportWrite(value, super.walletOverview, () {
+      super.walletOverview = value;
+    });
+  }
 
   late final _$earningsAtom =
       Atom(name: '_WalletStore.earnings', context: context);
@@ -149,6 +144,54 @@ mixin _$WalletStore on _WalletStore, Store {
   set rewards(Map<String, dynamic>? value) {
     _$rewardsAtom.reportWrite(value, super.rewards, () {
       super.rewards = value;
+    });
+  }
+
+  late final _$availableBalanceAtom =
+      Atom(name: '_WalletStore.availableBalance', context: context);
+
+  @override
+  double get availableBalance {
+    _$availableBalanceAtom.reportRead();
+    return super.availableBalance;
+  }
+
+  @override
+  set availableBalance(double value) {
+    _$availableBalanceAtom.reportWrite(value, super.availableBalance, () {
+      super.availableBalance = value;
+    });
+  }
+
+  late final _$todayEarningsAtom =
+      Atom(name: '_WalletStore.todayEarnings', context: context);
+
+  @override
+  double get todayEarnings {
+    _$todayEarningsAtom.reportRead();
+    return super.todayEarnings;
+  }
+
+  @override
+  set todayEarnings(double value) {
+    _$todayEarningsAtom.reportWrite(value, super.todayEarnings, () {
+      super.todayEarnings = value;
+    });
+  }
+
+  late final _$totalEarningsAtom =
+      Atom(name: '_WalletStore.totalEarnings', context: context);
+
+  @override
+  double get totalEarnings {
+    _$totalEarningsAtom.reportRead();
+    return super.totalEarnings;
+  }
+
+  @override
+  set totalEarnings(double value) {
+    _$totalEarningsAtom.reportWrite(value, super.totalEarnings, () {
+      super.totalEarnings = value;
     });
   }
 
@@ -314,6 +357,31 @@ mixin _$WalletStore on _WalletStore, Store {
     });
   }
 
+  late final _$isBalanceHiddenAtom =
+      Atom(name: '_WalletStore.isBalanceHidden', context: context);
+
+  @override
+  bool get isBalanceHidden {
+    _$isBalanceHiddenAtom.reportRead();
+    return super.isBalanceHidden;
+  }
+
+  @override
+  set isBalanceHidden(bool value) {
+    _$isBalanceHiddenAtom.reportWrite(value, super.isBalanceHidden, () {
+      super.isBalanceHidden = value;
+    });
+  }
+
+  late final _$loadWalletOverviewAsyncAction =
+      AsyncAction('_WalletStore.loadWalletOverview', context: context);
+
+  @override
+  Future<void> loadWalletOverview({bool forceRefresh = false}) {
+    return _$loadWalletOverviewAsyncAction
+        .run(() => super.loadWalletOverview(forceRefresh: forceRefresh));
+  }
+
   late final _$loadEarningsAsyncAction =
       AsyncAction('_WalletStore.loadEarnings', context: context);
 
@@ -442,6 +510,17 @@ mixin _$WalletStore on _WalletStore, Store {
       ActionController(name: '_WalletStore', context: context);
 
   @override
+  void toggleBalanceVisibility() {
+    final _$actionInfo = _$_WalletStoreActionController.startAction(
+        name: '_WalletStore.toggleBalanceVisibility');
+    try {
+      return super.toggleBalanceVisibility();
+    } finally {
+      _$_WalletStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setTransactionFilter(String? type, String? category) {
     final _$actionInfo = _$_WalletStoreActionController.startAction(
         name: '_WalletStore.setTransactionFilter');
@@ -477,10 +556,14 @@ mixin _$WalletStore on _WalletStore, Store {
   @override
   String toString() {
     return '''
+walletOverview: ${walletOverview},
 earnings: ${earnings},
 transactions: ${transactions},
 bankAccounts: ${bankAccounts},
 rewards: ${rewards},
+availableBalance: ${availableBalance},
+todayEarnings: ${todayEarnings},
+totalEarnings: ${totalEarnings},
 accountNumber: ${accountNumber},
 accountName: ${accountName},
 isLoading: ${isLoading},
@@ -491,9 +574,7 @@ selectedTransactionType: ${selectedTransactionType},
 selectedTransactionCategory: ${selectedTransactionCategory},
 selectedBankAccount: ${selectedBankAccount},
 pendingWithdrawalId: ${pendingWithdrawalId},
-availableBalance: ${availableBalance},
-totalEarnings: ${totalEarnings},
-todayEarnings: ${todayEarnings},
+isBalanceHidden: ${isBalanceHidden},
 lastTransaction: ${lastTransaction},
 recentTransactions: ${recentTransactions},
 monthlyTransactions: ${monthlyTransactions},

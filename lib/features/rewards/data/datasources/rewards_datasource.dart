@@ -10,6 +10,7 @@ import '../../domain/entities/badges_response.dart';
 import '../../domain/entities/environmental_impact_response.dart';
 import '../../domain/entities/challenges_response.dart';
 import '../../domain/entities/referral_response.dart';
+import '../../domain/entities/redeem_referral_response.dart';
 
 abstract class RewardsDataSource {
   Future<RewardsOverview> getRewardsOverview();
@@ -31,4 +32,5 @@ abstract class RewardsDataSource {
   Future<void> updateChallengeProgress(String challengeId, int progress);
   Future<void> redeemBenefit(String benefitId);
   Future<String> generateReferralCode();
+  Future<RedeemReferralResponse> redeemReferral(List<String>? referralIds);
 }

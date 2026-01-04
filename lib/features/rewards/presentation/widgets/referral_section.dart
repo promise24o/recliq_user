@@ -6,6 +6,7 @@ import '../../../../core/constants/image_paths.dart';
 import '../../../../shared/themes/app_theme.dart';
 import '../../../../shared/widgets/empty_state_widget.dart';
 import '../../../../shared/widgets/loading_overlay.dart';
+import '../../../../shared/widgets/custom_button.dart';
 import '../../domain/entities/referral_response.dart';
 import '../mobx/rewards_store.dart';
 
@@ -203,7 +204,7 @@ class _ReferralSectionState extends State<ReferralSection> {
                     ),
                     SizedBox(height: 6.h),
                     Text(
-                      '0',
+                      '${referralResponse.pointsRedeemed}',
                       style: TextStyle(
                         color: Colors.purple,
                         fontSize: 18.sp,
@@ -238,167 +239,232 @@ class _ReferralSectionState extends State<ReferralSection> {
           (referral) => _buildReferralItem(context, referral),
         ),
         SizedBox(height: 16.h),
-        // Redeem Points button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
+        // Redeem Points button - only show if there are points to redeem
+        if (referralResponse.pointsEarned > referralResponse.pointsRedeemed)
+          AppButton(
+            label: 'Redeem All Completed Referrals',
             onPressed: () {
               _showRedeemAllDialog(context, referralResponse!);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.primaryGreen,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 12.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-            ),
-            child: Text(
-              'Redeem All Completed Referrals',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            backgroundColor: AppTheme.primaryGreen,
+            color: Colors.white,
+            width: double.infinity,
           ),
-        ),
       ],
     );
   }
 
   Widget _buildReferralItem(BuildContext context, ReferralItem referral) {
-    final isRedeemable = referral.status == 'completed';
+    final status = referral.status.toLowerCase();
+    final isCompleted = status == 'completed';
+    final isRedeemed = status == 'redeemed';
+    final isCancelled = status == 'cancelled';
+    final isPending = status == 'pending';
+
+    Color backgroundColor;
+    Color accentColor;
+    IconData statusIcon;
+
+    switch (status) {
+      case 'completed':
+        backgroundColor = Colors.green.withOpacity(0.1);
+        accentColor = Colors.green;
+        statusIcon = FontAwesomeIcons.checkCircle;
+        break;
+      case 'redeemed':
+        backgroundColor = AppTheme.primaryGreen.withOpacity(0.15);
+        accentColor = AppTheme.primaryGreen;
+        statusIcon = FontAwesomeIcons.coins;
+        break;
+      case 'cancelled':
+        backgroundColor = Colors.red.withOpacity(0.1);
+        accentColor = Colors.red;
+        statusIcon = FontAwesomeIcons.ban;
+        break;
+      case 'pending':
+      default:
+        backgroundColor = Colors.orange.withOpacity(0.1);
+        accentColor = Colors.orange;
+        statusIcon = FontAwesomeIcons.clock;
+        break;
+    }
+
+    final bool showRedeemButton = isCompleted || isRedeemed;
 
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppTheme.borderSoft),
+        boxShadow: isRedeemed
+            ? [
+                BoxShadow(
+                  color: AppTheme.primaryGreen.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                )
+              ]
+            : null,
       ),
       child: Row(
         children: [
+          // Status Icon
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: referral.status == 'completed'
-                  ? Colors.green.withOpacity(0.1)
-                  : Colors.orange.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12.r),
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
-              referral.status == 'completed'
-                  ? FontAwesomeIcons.checkCircle
-                  : FontAwesomeIcons.clock,
-              color:
-                  referral.status == 'completed' ? Colors.green : Colors.orange,
-              size: 24.sp,
+              statusIcon,
+              color: accentColor,
+              size: 28.sp,
             ),
           ),
           SizedBox(width: 16.w),
+
+          // Details - Now wrapped in Expanded to prevent overflow
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Name + Status Badge Row
                 Row(
                   children: [
+                    // Referral name - takes available space
                     Expanded(
                       child: Text(
                         referral.name,
                         style: TextStyle(
                           color: AppTheme.textPrimary,
-                          fontSize: 14.sp,
+                          fontSize: 15.sp,
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),
-                    if (isRedeemable) ...[
-                      SizedBox(width: 8.w),
+                    SizedBox(width: 8.w),
+                    // Status badge (only one shown at a time)
+                    if (isCompleted || isRedeemed || isCancelled)
                       Container(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 6.w, vertical: 2.h),
+                            horizontal: 10.w, vertical: 4.h),
                         decoration: BoxDecoration(
-                          color: AppTheme.primaryGreen.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.r),
+                          color: switch (status) {
+                            'completed' => Colors.green.withOpacity(0.15),
+                            'redeemed' =>
+                              AppTheme.primaryGreen.withOpacity(0.2),
+                            'cancelled' => Colors.red.withOpacity(0.15),
+                            _ => Colors.transparent,
+                          },
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: status == 'completed'
+                              ? Border.all(color: Colors.green.withOpacity(0.4))
+                              : null,
                         ),
                         child: Text(
-                          'Redeemable',
+                          switch (status) {
+                            'completed' => 'Redeemable',
+                            'redeemed' => 'Redeemed',
+                            'cancelled' => 'Cancelled',
+                            _ => '',
+                          },
                           style: TextStyle(
-                            color: AppTheme.primaryGreen,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w600,
+                            color: switch (status) {
+                              'completed' => Colors.green,
+                              'redeemed' => AppTheme.primaryGreen,
+                              'cancelled' => Colors.red,
+                              _ => Colors.transparent,
+                            },
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
-                    ],
                   ],
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 8.h),
+
+                // Points & Status Text Row - no wrapper needed
                 Row(
                   children: [
-                    if (referral.status == 'completed') ...[
-                      Text(
-                        '+${referral.points} points',
-                        style: TextStyle(
-                          color: AppTheme.primaryGreen,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
+                    if (referral.points != null &&
+                        (isCompleted || isRedeemed)) ...[
+                      Flexible(
+                        child: Text(
+                          '+${referral.points} points',
+                          style: TextStyle(
+                            color: isRedeemed
+                                ? AppTheme.primaryGreen
+                                : Colors.green,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       SizedBox(width: 8.w),
                       Text(
                         '•',
                         style: TextStyle(
-                          color: AppTheme.textMuted,
-                          fontSize: 12.sp,
-                        ),
+                            color: AppTheme.textMuted, fontSize: 14.sp),
                       ),
                       SizedBox(width: 8.w),
-                      Text(
-                        'Completed',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ] else ...[
-                      Text(
-                        'Pending',
-                        style: TextStyle(
-                          color: Colors.orange,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
                     ],
+                    Flexible(
+                      child: Text(
+                        switch (status) {
+                          'completed' => 'Completed',
+                          'redeemed' => 'Points Redeemed',
+                          'cancelled' => 'Cancelled',
+                          'pending' => 'Pending',
+                          _ => 'Unknown',
+                        },
+                        style: TextStyle(
+                          color: accentColor,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: 6.h),
+
+                // Date
                 Text(
                   _formatDate(referral.createdAt),
                   style: TextStyle(
                     color: AppTheme.textMuted,
                     fontSize: 11.sp,
                   ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ],
             ),
           ),
-          if (isRedeemable)
-            IconButton(
-              onPressed: () {
-                _showRedeemDialog(context, referral);
-              },
-              icon: Icon(
-                FontAwesomeIcons.coins,
-                color: AppTheme.primaryGreen,
-                size: 20.sp,
+
+          // Redeem Button (only for completed/redeemed)
+          if (showRedeemButton)
+            Padding(
+              padding: EdgeInsets.only(left: 12.w),
+              child: IconButton(
+                onPressed: isRedeemed
+                    ? null
+                    : () => _showRedeemDialog(context, referral),
+                icon: Icon(
+                  FontAwesomeIcons.gift,
+                  color:
+                      isRedeemed ? AppTheme.textMuted : AppTheme.primaryGreen,
+                  size: 22.sp,
+                ),
+                tooltip: isRedeemed ? 'Already Redeemed' : 'Redeem Points',
               ),
-              tooltip: 'Redeem Points',
             ),
         ],
       ),
@@ -606,71 +672,28 @@ class _ReferralSectionState extends State<ReferralSection> {
                   Row(
                     children: [
                       Expanded(
-                        child: SizedBox(
-                          height: 48.h,
-                          child: TextButton(
-                            onPressed: _isRedeeming
-                                ? null
-                                : () => Navigator.of(context).pop(),
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: AppTheme.textSecondary,
-                              side: BorderSide(
-                                color: AppTheme.borderSoft,
-                                width: 1,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
+                        child: SecondaryButton(
+                          label: 'Cancel',
+                          onPressed: _isRedeeming
+                              ? null
+                              : () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: SizedBox(
-                          height: 48.h,
-                          child: ElevatedButton(
-                            onPressed: _isRedeeming
-                                ? null
-                                : () async {
-                                    setState(() => _isRedeeming = true);
-                                    Navigator.of(context).pop();
-                                    _redeemReferral(context, [referral.id]);
-                                    setState(() => _isRedeeming = false);
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryGreen,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            child: _isRedeeming
-                                ? SizedBox(
-                                    width: 20.w,
-                                    height: 20.w,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    'Redeem',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                          ),
+                        child: AppButton(
+                          label: 'Redeem',
+                          loading: _isRedeeming,
+                          onPressed: _isRedeeming
+                              ? null
+                              : () async {
+                                  setState(() => _isRedeeming = true);
+                                  Navigator.of(context).pop();
+                                  _redeemReferral(context, [referral.id]);
+                                  setState(() => _isRedeeming = false);
+                                },
+                          backgroundColor: AppTheme.primaryGreen,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -804,74 +827,31 @@ class _ReferralSectionState extends State<ReferralSection> {
                   Row(
                     children: [
                       Expanded(
-                        child: SizedBox(
-                          height: 48.h,
-                          child: TextButton(
-                            onPressed: _isRedeeming
-                                ? null
-                                : () => Navigator.of(context).pop(),
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: AppTheme.textSecondary,
-                              side: BorderSide(
-                                color: AppTheme.borderSoft,
-                                width: 1,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            child: Text(
-                              'Cancel',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
+                        child: SecondaryButton(
+                          label: 'Cancel',
+                          onPressed: _isRedeeming
+                              ? null
+                              : () => Navigator.of(context).pop(),
                         ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
-                        child: SizedBox(
-                          height: 48.h,
-                          child: ElevatedButton(
-                            onPressed: _isRedeeming
-                                ? null
-                                : () async {
-                                    setState(() => _isRedeeming = true);
-                                    Navigator.of(context).pop();
-                                    final referralIds = completedReferrals
-                                        .map((r) => r.id)
-                                        .toList();
-                                    _redeemReferral(context, referralIds);
-                                    setState(() => _isRedeeming = false);
-                                  },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppTheme.primaryGreen,
-                              foregroundColor: Colors.white,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                            ),
-                            child: _isRedeeming
-                                ? SizedBox(
-                                    width: 20.w,
-                                    height: 20.w,
-                                    child: CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : Text(
-                                    'Redeem All',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                          ),
+                        child: AppButton(
+                          label: 'Redeem All',
+                          loading: _isRedeeming,
+                          onPressed: _isRedeeming
+                              ? null
+                              : () async {
+                                  setState(() => _isRedeeming = true);
+                                  Navigator.of(context).pop();
+                                  final referralIds = completedReferrals
+                                      .map((r) => r.id)
+                                      .toList();
+                                  _redeemReferral(context, referralIds);
+                                  setState(() => _isRedeeming = false);
+                                },
+                          backgroundColor: AppTheme.primaryGreen,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -885,15 +865,12 @@ class _ReferralSectionState extends State<ReferralSection> {
     );
   }
 
-  void _redeemReferral(BuildContext context, List<String> referralIds) {
-    // TODO: Implement actual API call to redeem referrals
-    // For now, show a success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:
-            Text('Successfully redeemed ${referralIds.length} referral(s)!'),
-        backgroundColor: AppTheme.primaryGreen,
-      ),
-    );
+  void _redeemReferral(BuildContext context, List<String> referralIds) async {
+    final result = await widget.rewardsStore.redeemReferral(referralIds);
+
+    if (result != null) {
+      // Successfully redeemed, the store already shows success toast
+      // and refreshes the referral list
+    }
   }
 }

@@ -14,6 +14,7 @@ import '../../domain/entities/badges_response.dart';
 import '../../domain/entities/environmental_impact_response.dart';
 import '../../domain/entities/challenges_response.dart';
 import '../../domain/entities/referral_response.dart';
+import '../../domain/entities/redeem_referral_response.dart';
 import '../../domain/repositories/rewards_repository.dart';
 import '../../domain/usecases/get_rewards_overview.dart';
 import '../../domain/usecases/get_activity_feed.dart';
@@ -22,6 +23,7 @@ import '../../domain/usecases/get_badges.dart';
 import '../../domain/usecases/get_environmental_impact.dart';
 import '../../domain/usecases/get_challenges.dart';
 import '../../domain/usecases/get_referral.dart';
+import '../../domain/usecases/redeem_referral.dart';
 import '../../../../shared/services/toast_service.dart';
 
 part 'rewards_store.g.dart';
@@ -37,6 +39,7 @@ abstract class _RewardsStore with Store {
   late final GetEnvironmentalImpact _getEnvironmentalImpact;
   late final GetChallenges _getChallenges;
   late final GetReferral _getReferral;
+  late final RedeemReferral _redeemReferral;
 
   _RewardsStore(this._rewardsRepository) {
     _getRewardsOverview = GetRewardsOverview(_rewardsRepository);
@@ -46,6 +49,7 @@ abstract class _RewardsStore with Store {
     _getEnvironmentalImpact = GetEnvironmentalImpact(_rewardsRepository);
     _getChallenges = GetChallenges(_rewardsRepository);
     _getReferral = GetReferral(_rewardsRepository);
+    _redeemReferral = RedeemReferral(_rewardsRepository);
   }
 
   // Observable states
@@ -233,6 +237,37 @@ abstract class _RewardsStore with Store {
       );
     } catch (e) {
       error = 'Failed to load referral information: ${e.toString()}';
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  @action
+  Future<RedeemReferralResponse?> redeemReferral(
+      List<String>? referralIds) async {
+    try {
+      isLoading = true;
+      error = null;
+      final result = await _redeemReferral(referralIds);
+
+      return result.fold(
+        (errorMessage) {
+          error = errorMessage;
+          ToastService.showError(errorMessage);
+          return null;
+        },
+        (redeemResponse) {
+          // Refresh the referral list after successful redemption
+          loadReferral();
+          ToastService.showSuccess(
+              'Successfully redeemed ${redeemResponse.redeemedCount} referral(s) for ${redeemResponse.totalPointsRedeemed} points!');
+          return redeemResponse;
+        },
+      );
+    } catch (e) {
+      error = 'Failed to redeem referrals: ${e.toString()}';
+      ToastService.showError(error!);
+      return null;
     } finally {
       isLoading = false;
     }
