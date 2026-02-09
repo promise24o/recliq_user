@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
               profileStore: _profileStore,
               onLogout: _handleLogout,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
           ],
         ),
       ),

@@ -11,5 +11,6 @@ class Failure with _$Failure {
   const factory Failure.forbidden([String? message]) = ForbiddenFailure;
   const factory Failure.notFound([String? message]) = NotFoundFailure;
   const factory Failure.cacheError([String? message]) = CacheFailure;
+  const factory Failure.biometricError([String? message]) = BiometricFailure;
   const factory Failure.unexpected([String? message]) = UnexpectedFailure;
 }

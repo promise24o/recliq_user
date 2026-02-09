@@ -6,6 +6,7 @@ import '../../../../shared/services/toast_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../profile/domain/repositories/profile_repository.dart';
+import '../../../../core/errors/failures.dart';
 
 part 'auth_store.g.dart';
 
@@ -199,8 +200,27 @@ abstract class _AuthStore with Store {
           return data;
         }
 
-        // Fallback with status code
-        return 'Request failed (${response.statusCode})';
+        // Fallback with user-friendly message based on status code
+        switch (response.statusCode) {
+          case 400:
+            return 'Invalid request. Please check your input and try again.';
+          case 401:
+            return 'Authentication failed. Please check your credentials.';
+          case 403:
+            return 'Access denied. You don\'t have permission to perform this action.';
+          case 404:
+            return 'The requested resource was not found.';
+          case 429:
+            return 'Too many requests. Please try again later.';
+          case 500:
+            return 'Server error. Please try again later.';
+          case 502:
+          case 503:
+          case 504:
+            return 'Service temporarily unavailable. Please try again later.';
+          default:
+            return 'Something went wrong. Please try again.';
+        }
       }
 
       // Network / timeout errors
@@ -216,21 +236,67 @@ abstract class _AuthStore with Store {
       }
     }
 
-    // 2. Custom Failure class (Repository layer)
-    if (failure.toString().contains('UnauthorizedFailure')) {
-      return 'Session expired. Please login again.';
-    } else if (failure.toString().contains('ForbiddenFailure')) {
-      return 'Access denied. You don\'t have permission to perform this action.';
-    } else if (failure.toString().contains('NotFoundFailure')) {
-      return 'The requested resource was not found.';
-    } else if (failure.toString().contains('NetworkFailure')) {
-      return 'Network error. Please check your internet connection.';
-    } else if (failure.toString().contains('ServerFailure')) {
-      return 'Server error. Please try again later.';
+    // 2. Custom Failure class (Repository layer) - Use proper Freezed pattern matching
+    try {
+      if (failure is Failure) {
+        return failure.when(
+          serverError: (message) =>
+              message ?? 'Server error. Please try again.',
+          networkError: (message) =>
+              message ??
+              'Network error. Please check your internet connection.',
+          invalidInput: (message) =>
+              message ?? 'Invalid input. Please check your details.',
+          unauthorized: (message) =>
+              message ?? 'Session expired. Please login again.',
+          forbidden: (message) =>
+              message ??
+              'Access denied. You don\'t have permission to perform this action.',
+          notFound: (message) =>
+              message ?? 'The requested resource was not found.',
+          cacheError: (message) => message ?? 'Cache error. Please try again.',
+          biometricError: (message) =>
+              message ?? 'Biometric authentication failed. Please try again.',
+          unexpected: (message) =>
+              message ?? 'Something went wrong. Please try again.',
+        );
+      }
+    } catch (e) {
+      // Fallback if pattern matching fails
     }
 
-    // 3. Generic fallback
-    return failure.toString().replaceAll('Failure: ', '');
+    // 3. Generic fallback - extract message from string representation if possible
+    final failureString = failure.toString();
+
+    // Try to extract message from Failure.serverError(message: xxx) pattern
+    if (failureString.contains('Failure.serverError(message:')) {
+      final startIndex = failureString.indexOf('message:') + 8;
+      final endIndex = failureString.indexOf(')', startIndex);
+      if (endIndex != -1) {
+        final message = failureString.substring(startIndex, endIndex).trim();
+        if (message.isNotEmpty && message != 'null') {
+          return message;
+        }
+      }
+    }
+
+    // Try other Failure patterns
+    if (failureString.contains('Failure.networkError(message:')) {
+      final startIndex = failureString.indexOf('message:') + 8;
+      final endIndex = failureString.indexOf(')', startIndex);
+      if (endIndex != -1) {
+        final message = failureString.substring(startIndex, endIndex).trim();
+        if (message.isNotEmpty && message != 'null') {
+          return message;
+        }
+      }
+    }
+
+    // Clean up any remaining Failure prefixes
+    return failureString
+        .replaceAll(RegExp(r'^Failure\.[^:]+\(message:\s*'), '')
+        .replaceAll(RegExp(r'\)$'), '')
+        .replaceAll('Failure: ', '');
   }
 
   @action

@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
+import 'package:local_auth/local_auth.dart';
 import '../../features/rewards/data/datasources/rewards_datasource_impl.dart'
     show RewardsDataSourceImpl;
 import '../interceptors/auth_interceptor.dart';
@@ -24,7 +24,9 @@ import '../../features/rewards/domain/repositories/rewards_repository.dart';
 import '../../features/rewards/data/datasources/rewards_datasource.dart';
 import '../../features/rewards/data/datasources/rewards_remote_data_source.dart';
 import '../../features/rewards/presentation/mobx/rewards_store.dart';
+import '../../features/pin_auth/data/datasources/pin_auth_local_datasource.dart';
 import '../../core/network/network_info.dart';
+import '../config/app_config.dart';
 
 @module
 abstract class ThirdPartyModules {
@@ -35,8 +37,15 @@ abstract class ThirdPartyModules {
   FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
 
   @lazySingleton
+  PinAuthLocalDataSource get pinAuthLocalDataSource =>
+      PinAuthLocalDataSourceImpl(
+        secureStorage: secureStorage,
+        localAuth: LocalAuthentication(),
+      );
+
+  @lazySingleton
   ProfileRepository get profileRepository =>
-      ProfileRepositoryImpl(secureStorage, dio);
+      ProfileRepositoryImpl(secureStorage, dio, pinAuthLocalDataSource);
 
   @lazySingleton
   NetworkInfo get networkInfo => NetworkInfoImpl(
@@ -126,9 +135,5 @@ abstract class ThirdPartyModules {
 }
 
 String _getBaseUrl() {
-  if (Platform.isAndroid) {
-    return 'http://10.0.2.2:5001'; // Android emulator
-  } else {
-    return 'http://localhost:5001'; // iOS simulator & macOS
-  }
+  return AppConfig.baseUrl;
 }

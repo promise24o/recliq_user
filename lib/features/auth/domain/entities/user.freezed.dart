@@ -31,6 +31,7 @@ mixin _$User {
   double get walletBalance => throw _privateConstructorUsedError;
   String? get profilePhoto => throw _privateConstructorUsedError;
   String? get referralCode => throw _privateConstructorUsedError;
+  String? get pin => throw _privateConstructorUsedError;
 
   /// Serializes this User to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,7 +57,8 @@ abstract class $UserCopyWith<$Res> {
       bool hasPin,
       double walletBalance,
       String? profilePhoto,
-      String? referralCode});
+      String? referralCode,
+      String? pin});
 }
 
 /// @nodoc
@@ -84,6 +86,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? walletBalance = null,
     Object? profilePhoto = freezed,
     Object? referralCode = freezed,
+    Object? pin = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -126,6 +129,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.referralCode
           : referralCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      pin: freezed == pin
+          ? _value.pin
+          : pin // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -147,7 +154,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       bool hasPin,
       double walletBalance,
       String? profilePhoto,
-      String? referralCode});
+      String? referralCode,
+      String? pin});
 }
 
 /// @nodoc
@@ -172,6 +180,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? walletBalance = null,
     Object? profilePhoto = freezed,
     Object? referralCode = freezed,
+    Object? pin = freezed,
   }) {
     return _then(_$UserImpl(
       id: null == id
@@ -214,6 +223,10 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.referralCode
           : referralCode // ignore: cast_nullable_to_non_nullable
               as String?,
+      pin: freezed == pin
+          ? _value.pin
+          : pin // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -231,7 +244,8 @@ class _$UserImpl implements _User {
       this.hasPin = false,
       this.walletBalance = 0.0,
       this.profilePhoto,
-      this.referralCode});
+      this.referralCode,
+      this.pin});
 
   factory _$UserImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserImplFromJson(json);
@@ -260,10 +274,12 @@ class _$UserImpl implements _User {
   final String? profilePhoto;
   @override
   final String? referralCode;
+  @override
+  final String? pin;
 
   @override
   String toString() {
-    return 'User(id: $id, phoneNumber: $phoneNumber, email: $email, name: $name, role: $role, isVerified: $isVerified, hasPin: $hasPin, walletBalance: $walletBalance, profilePhoto: $profilePhoto, referralCode: $referralCode)';
+    return 'User(id: $id, phoneNumber: $phoneNumber, email: $email, name: $name, role: $role, isVerified: $isVerified, hasPin: $hasPin, walletBalance: $walletBalance, profilePhoto: $profilePhoto, referralCode: $referralCode, pin: $pin)';
   }
 
   @override
@@ -285,13 +301,14 @@ class _$UserImpl implements _User {
             (identical(other.profilePhoto, profilePhoto) ||
                 other.profilePhoto == profilePhoto) &&
             (identical(other.referralCode, referralCode) ||
-                other.referralCode == referralCode));
+                other.referralCode == referralCode) &&
+            (identical(other.pin, pin) || other.pin == pin));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, phoneNumber, email, name,
-      role, isVerified, hasPin, walletBalance, profilePhoto, referralCode);
+      role, isVerified, hasPin, walletBalance, profilePhoto, referralCode, pin);
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.
@@ -320,7 +337,8 @@ abstract class _User implements User {
       final bool hasPin,
       final double walletBalance,
       final String? profilePhoto,
-      final String? referralCode}) = _$UserImpl;
+      final String? referralCode,
+      final String? pin}) = _$UserImpl;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$UserImpl.fromJson;
 
@@ -345,6 +363,8 @@ abstract class _User implements User {
   String? get profilePhoto;
   @override
   String? get referralCode;
+  @override
+  String? get pin;
 
   /// Create a copy of User
   /// with the given fields replaced by the non-null parameter values.

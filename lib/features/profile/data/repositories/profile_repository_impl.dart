@@ -6,15 +6,18 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../auth/domain/entities/user.dart';
 import '../../domain/repositories/profile_repository.dart';
+import '../../../pin_auth/data/datasources/pin_auth_local_datasource.dart';
 
 @injectable
 class ProfileRepositoryImpl implements ProfileRepository {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
+  final PinAuthLocalDataSource? _pinAuthLocalDataSource;
 
   ProfileRepositoryImpl(
     @Named('secure_storage') this._secureStorage,
     this._dio,
+    this._pinAuthLocalDataSource,
   );
 
   @override
@@ -27,6 +30,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
       if (_isSuccess(response)) {
         final user = User.fromJson(response.data);
+
+        // Store PIN if it's returned from /me endpoint
+        if (user.pin != null && _pinAuthLocalDataSource != null) {
+          await _pinAuthLocalDataSource!.storePin(user.pin!);
+        }
+
         return Right(user);
       }
 

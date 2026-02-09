@@ -28,7 +28,9 @@ import '../../../../shared/services/toast_service.dart';
 
 part 'rewards_store.g.dart';
 
-class RewardsStore = _RewardsStore with _$RewardsStore;
+class RewardsStore extends _RewardsStore with _$RewardsStore {
+  RewardsStore(RewardsRepository repository) : super(repository);
+}
 
 abstract class _RewardsStore with Store {
   final RewardsRepository _rewardsRepository;

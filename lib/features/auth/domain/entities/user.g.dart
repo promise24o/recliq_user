@@ -17,6 +17,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       walletBalance: (json['walletBalance'] as num?)?.toDouble() ?? 0.0,
       profilePhoto: json['profilePhoto'] as String?,
       referralCode: json['referralCode'] as String?,
+      pin: json['pin'] as String?,
     );
 
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
@@ -31,4 +32,5 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'walletBalance': instance.walletBalance,
       'profilePhoto': instance.profilePhoto,
       'referralCode': instance.referralCode,
+      'pin': instance.pin,
     };

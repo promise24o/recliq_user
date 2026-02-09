@@ -13,6 +13,7 @@ import '../../features/wallet/presentation/pages/wallet_page.dart';
 import '../../features/wallet/presentation/pages/transactions_page.dart';
 import '../../features/wallet/presentation/pages/bank_accounts_page.dart';
 import '../../features/rewards/presentation/pages/rewards_page.dart';
+import '../../features/pin_auth/presentation/pages/pin_auth_page.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -121,6 +122,17 @@ class AppRouter {
               ),
               child: child,
             );
+          },
+        ),
+      ),
+      GoRoute(
+        path: '/pin-auth',
+        builder: (context, state) => const PinAuthPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const PinAuthPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
           },
         ),
       ),

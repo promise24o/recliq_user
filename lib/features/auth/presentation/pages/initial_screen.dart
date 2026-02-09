@@ -36,8 +36,8 @@ class _InitialScreenState extends State<InitialScreen> {
         await _authStore.getCurrentUser();
 
         if (_authStore.isAuthenticated) {
-          // User is logged in, redirect to dashboard
-          context.go('/home');
+          // User is logged in, redirect to PIN authentication
+          context.go('/pin-auth');
         } else {
           // User is not logged in, show auth gate
           context.go('/auth-gate');

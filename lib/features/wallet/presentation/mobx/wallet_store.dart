@@ -9,7 +9,10 @@ import 'mock_wallet_repository.dart';
 
 part 'wallet_store.g.dart';
 
-class WalletStore = _WalletStore with _$WalletStore;
+class WalletStore extends _WalletStore with _$WalletStore {
+  WalletStore({required WalletRepository repository})
+      : super(repository: repository);
+}
 
 abstract class _WalletStore with Store {
   final WalletRepository _repository;

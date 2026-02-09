@@ -26,6 +26,7 @@ mixin _$Failure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -38,6 +39,7 @@ mixin _$Failure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -50,6 +52,7 @@ mixin _$Failure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) =>
@@ -63,6 +66,7 @@ mixin _$Failure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -75,6 +79,7 @@ mixin _$Failure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) =>
       throw _privateConstructorUsedError;
@@ -87,6 +92,7 @@ mixin _$Failure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) =>
@@ -209,6 +215,7 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return serverError(message);
@@ -224,6 +231,7 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return serverError?.call(message);
@@ -239,6 +247,7 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -258,6 +267,7 @@ class _$ServerFailureImpl implements ServerFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return serverError(this);
@@ -273,6 +283,7 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return serverError?.call(this);
@@ -288,6 +299,7 @@ class _$ServerFailureImpl implements ServerFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -390,6 +402,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return networkError(message);
@@ -405,6 +418,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return networkError?.call(message);
@@ -420,6 +434,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -439,6 +454,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return networkError(this);
@@ -454,6 +470,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return networkError?.call(this);
@@ -469,6 +486,7 @@ class _$NetworkFailureImpl implements NetworkFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -571,6 +589,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return invalidInput(message);
@@ -586,6 +605,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return invalidInput?.call(message);
@@ -601,6 +621,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -620,6 +641,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return invalidInput(this);
@@ -635,6 +657,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return invalidInput?.call(this);
@@ -650,6 +673,7 @@ class _$InvalidInputFailureImpl implements InvalidInputFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -753,6 +777,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return unauthorized(message);
@@ -768,6 +793,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return unauthorized?.call(message);
@@ -783,6 +809,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -802,6 +829,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return unauthorized(this);
@@ -817,6 +845,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return unauthorized?.call(this);
@@ -832,6 +861,7 @@ class _$UnauthorizedFailureImpl implements UnauthorizedFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -935,6 +965,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return forbidden(message);
@@ -950,6 +981,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return forbidden?.call(message);
@@ -965,6 +997,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -984,6 +1017,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return forbidden(this);
@@ -999,6 +1033,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return forbidden?.call(this);
@@ -1014,6 +1049,7 @@ class _$ForbiddenFailureImpl implements ForbiddenFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -1117,6 +1153,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return notFound(message);
@@ -1132,6 +1169,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return notFound?.call(message);
@@ -1147,6 +1185,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -1166,6 +1205,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return notFound(this);
@@ -1181,6 +1221,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return notFound?.call(this);
@@ -1196,6 +1237,7 @@ class _$NotFoundFailureImpl implements NotFoundFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -1298,6 +1340,7 @@ class _$CacheFailureImpl implements CacheFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return cacheError(message);
@@ -1313,6 +1356,7 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return cacheError?.call(message);
@@ -1328,6 +1372,7 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -1347,6 +1392,7 @@ class _$CacheFailureImpl implements CacheFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return cacheError(this);
@@ -1362,6 +1408,7 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return cacheError?.call(this);
@@ -1377,6 +1424,7 @@ class _$CacheFailureImpl implements CacheFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {
@@ -1398,6 +1446,194 @@ abstract class CacheFailure implements Failure {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CacheFailureImplCopyWith<_$CacheFailureImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BiometricFailureImplCopyWith<$Res>
+    implements $FailureCopyWith<$Res> {
+  factory _$$BiometricFailureImplCopyWith(_$BiometricFailureImpl value,
+          $Res Function(_$BiometricFailureImpl) then) =
+      __$$BiometricFailureImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? message});
+}
+
+/// @nodoc
+class __$$BiometricFailureImplCopyWithImpl<$Res>
+    extends _$FailureCopyWithImpl<$Res, _$BiometricFailureImpl>
+    implements _$$BiometricFailureImplCopyWith<$Res> {
+  __$$BiometricFailureImplCopyWithImpl(_$BiometricFailureImpl _value,
+      $Res Function(_$BiometricFailureImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = freezed,
+  }) {
+    return _then(_$BiometricFailureImpl(
+      freezed == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BiometricFailureImpl implements BiometricFailure {
+  const _$BiometricFailureImpl([this.message]);
+
+  @override
+  final String? message;
+
+  @override
+  String toString() {
+    return 'Failure.biometricError(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BiometricFailureImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BiometricFailureImplCopyWith<_$BiometricFailureImpl> get copyWith =>
+      __$$BiometricFailureImplCopyWithImpl<_$BiometricFailureImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? message) serverError,
+    required TResult Function(String? message) networkError,
+    required TResult Function(String? message) invalidInput,
+    required TResult Function(String? message) unauthorized,
+    required TResult Function(String? message) forbidden,
+    required TResult Function(String? message) notFound,
+    required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
+    required TResult Function(String? message) unexpected,
+  }) {
+    return biometricError(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? message)? serverError,
+    TResult? Function(String? message)? networkError,
+    TResult? Function(String? message)? invalidInput,
+    TResult? Function(String? message)? unauthorized,
+    TResult? Function(String? message)? forbidden,
+    TResult? Function(String? message)? notFound,
+    TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
+    TResult? Function(String? message)? unexpected,
+  }) {
+    return biometricError?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? message)? serverError,
+    TResult Function(String? message)? networkError,
+    TResult Function(String? message)? invalidInput,
+    TResult Function(String? message)? unauthorized,
+    TResult Function(String? message)? forbidden,
+    TResult Function(String? message)? notFound,
+    TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
+    TResult Function(String? message)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (biometricError != null) {
+      return biometricError(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ServerFailure value) serverError,
+    required TResult Function(NetworkFailure value) networkError,
+    required TResult Function(InvalidInputFailure value) invalidInput,
+    required TResult Function(UnauthorizedFailure value) unauthorized,
+    required TResult Function(ForbiddenFailure value) forbidden,
+    required TResult Function(NotFoundFailure value) notFound,
+    required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
+    required TResult Function(UnexpectedFailure value) unexpected,
+  }) {
+    return biometricError(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ServerFailure value)? serverError,
+    TResult? Function(NetworkFailure value)? networkError,
+    TResult? Function(InvalidInputFailure value)? invalidInput,
+    TResult? Function(UnauthorizedFailure value)? unauthorized,
+    TResult? Function(ForbiddenFailure value)? forbidden,
+    TResult? Function(NotFoundFailure value)? notFound,
+    TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
+    TResult? Function(UnexpectedFailure value)? unexpected,
+  }) {
+    return biometricError?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ServerFailure value)? serverError,
+    TResult Function(NetworkFailure value)? networkError,
+    TResult Function(InvalidInputFailure value)? invalidInput,
+    TResult Function(UnauthorizedFailure value)? unauthorized,
+    TResult Function(ForbiddenFailure value)? forbidden,
+    TResult Function(NotFoundFailure value)? notFound,
+    TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
+    TResult Function(UnexpectedFailure value)? unexpected,
+    required TResult orElse(),
+  }) {
+    if (biometricError != null) {
+      return biometricError(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BiometricFailure implements Failure {
+  const factory BiometricFailure([final String? message]) =
+      _$BiometricFailureImpl;
+
+  @override
+  String? get message;
+
+  /// Create a copy of Failure
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$BiometricFailureImplCopyWith<_$BiometricFailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1479,6 +1715,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     required TResult Function(String? message) forbidden,
     required TResult Function(String? message) notFound,
     required TResult Function(String? message) cacheError,
+    required TResult Function(String? message) biometricError,
     required TResult Function(String? message) unexpected,
   }) {
     return unexpected(message);
@@ -1494,6 +1731,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult? Function(String? message)? forbidden,
     TResult? Function(String? message)? notFound,
     TResult? Function(String? message)? cacheError,
+    TResult? Function(String? message)? biometricError,
     TResult? Function(String? message)? unexpected,
   }) {
     return unexpected?.call(message);
@@ -1509,6 +1747,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult Function(String? message)? forbidden,
     TResult Function(String? message)? notFound,
     TResult Function(String? message)? cacheError,
+    TResult Function(String? message)? biometricError,
     TResult Function(String? message)? unexpected,
     required TResult orElse(),
   }) {
@@ -1528,6 +1767,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     required TResult Function(ForbiddenFailure value) forbidden,
     required TResult Function(NotFoundFailure value) notFound,
     required TResult Function(CacheFailure value) cacheError,
+    required TResult Function(BiometricFailure value) biometricError,
     required TResult Function(UnexpectedFailure value) unexpected,
   }) {
     return unexpected(this);
@@ -1543,6 +1783,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult? Function(ForbiddenFailure value)? forbidden,
     TResult? Function(NotFoundFailure value)? notFound,
     TResult? Function(CacheFailure value)? cacheError,
+    TResult? Function(BiometricFailure value)? biometricError,
     TResult? Function(UnexpectedFailure value)? unexpected,
   }) {
     return unexpected?.call(this);
@@ -1558,6 +1799,7 @@ class _$UnexpectedFailureImpl implements UnexpectedFailure {
     TResult Function(ForbiddenFailure value)? forbidden,
     TResult Function(NotFoundFailure value)? notFound,
     TResult Function(CacheFailure value)? cacheError,
+    TResult Function(BiometricFailure value)? biometricError,
     TResult Function(UnexpectedFailure value)? unexpected,
     required TResult orElse(),
   }) {

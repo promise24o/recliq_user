@@ -54,10 +54,59 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       _otpControllers.every((c) => c.text.trim().isNotEmpty);
 
   void _onOtpChanged(int index, String value) {
+    // Handle paste operation
+    if (value.length > 1) {
+      _handlePaste(value);
+      return;
+    }
+
+    // Handle single digit input
     if (value.length == 1 && index < 5) {
       _focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
+    }
+
+    // Auto-verify when OTP is complete
+    if (_isOtpComplete) {
+      // Add a small delay to ensure the last digit is registered
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (_isOtpComplete && mounted) {
+          _handleVerification();
+        }
+      });
+    }
+  }
+
+  void _handlePaste(String pastedText) {
+    // Remove any non-digit characters
+    final digits = pastedText.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Take only the first 6 digits
+    final otpDigits = digits.substring(0, 6);
+
+    // Fill the OTP fields
+    for (int i = 0; i < otpDigits.length && i < 6; i++) {
+      _otpControllers[i].text = otpDigits[i];
+    }
+
+    // Clear any extra fields if pasted text was shorter than 6 digits
+    for (int i = otpDigits.length; i < 6; i++) {
+      _otpControllers[i].clear();
+    }
+
+    // Focus on the next empty field or the last filled field
+    if (otpDigits.length < 6) {
+      _focusNodes[otpDigits.length].requestFocus();
+    }
+
+    // Auto-verify if we have 6 digits
+    if (otpDigits.length == 6) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          _handleVerification();
+        }
+      });
     }
   }
 
@@ -123,7 +172,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         controller: _otpControllers[index],
         focusNode: _focusNodes[index],
         keyboardType: TextInputType.number,
-        maxLength: 1,
+        maxLength: 6, // Allow up to 6 characters for paste
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         cursorColor: AppTheme.primaryGreen,
         textAlign: TextAlign.center,
@@ -135,6 +184,12 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         decoration:
             const InputDecoration(counterText: '', border: InputBorder.none),
         onChanged: (value) => _onOtpChanged(index, value),
+        onSubmitted: (_) {
+          // Handle submission when user presses done on keyboard
+          if (_isOtpComplete) {
+            _handleVerification();
+          }
+        },
       ),
     );
   }

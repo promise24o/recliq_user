@@ -5,13 +5,21 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../../pin_auth/data/datasources/pin_auth_local_datasource.dart';
 
 @Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;
+  final PinAuthLocalDataSource _pinAuthLocalDataSource;
 
-  AuthRepositoryImpl(@Named('secure_storage') this._secureStorage, this._dio);
+  AuthRepositoryImpl({
+    required FlutterSecureStorage secureStorage,
+    required Dio dio,
+    required PinAuthLocalDataSource pinAuthLocalDataSource,
+  })  : _secureStorage = secureStorage,
+        _dio = dio,
+        _pinAuthLocalDataSource = pinAuthLocalDataSource;
 
   User? _currentUser;
 
@@ -28,9 +36,33 @@ class AuthRepositoryImpl implements AuthRepository {
     if (data is String && data.isNotEmpty) {
       return ServerFailure(data);
     }
-    return ServerFailure(
-      'Request failed${e.response?.statusCode != null ? ' (${e.response!.statusCode})' : ''}',
-    );
+
+    // Provide user-friendly messages based on status code
+    final statusCode = e.response?.statusCode;
+    switch (statusCode) {
+      case 400:
+        return ServerFailure(
+            'Invalid request. Please check your input and try again.');
+      case 401:
+        return ServerFailure(
+            'Authentication failed. Please check your credentials.');
+      case 403:
+        return ServerFailure(
+            'Access denied. You don\'t have permission to perform this action.');
+      case 404:
+        return ServerFailure('The requested resource was not found.');
+      case 429:
+        return ServerFailure('Too many requests. Please try again later.');
+      case 500:
+        return ServerFailure('Server error. Please try again later.');
+      case 502:
+      case 503:
+      case 504:
+        return ServerFailure(
+            'Service temporarily unavailable. Please try again later.');
+      default:
+        return ServerFailure('Something went wrong. Please try again.');
+    }
   }
 
   @override
@@ -135,6 +167,15 @@ class AuthRepositoryImpl implements AuthRepository {
         // Store complete user object in secure storage
         await _secureStorage.write(
             key: 'user_data', value: user.toJson().toString());
+
+        // Store PIN from response if available
+        if (data['pin'] != null) {
+          print('DEBUG: Storing PIN from verify-otp response: ${data['pin']}');
+          await _pinAuthLocalDataSource.storePin(data['pin'].toString());
+          print('DEBUG: PIN stored successfully');
+        } else {
+          print('DEBUG: No PIN in verify-otp response');
+        }
 
         return Right(user);
       }

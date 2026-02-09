@@ -5,8 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import '../../../auth/domain/entities/user.dart';
 import '../../domain/repositories/profile_repository.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../shared/services/toast_service.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../pin_auth/data/datasources/pin_auth_local_datasource.dart';
 
 part 'profile_store.g.dart';
 
@@ -216,12 +218,27 @@ abstract class _ProfileStore with Store {
     final result = await _profileRepository.updatePin(oldPin, newPin);
     result.fold(
       (failure) => _handleFailure(failure),
-      (_) {
+      (_) async {
         ToastService.showSuccess('PIN updated successfully!');
+        // Refresh user data to get the new PIN from /me endpoint
+        await loadProfileData();
+        // Also update the PIN in secure storage
+        await _updatePinInSecureStorage(newPin);
       },
     );
 
     isLoading = false;
+  }
+
+  Future<void> _updatePinInSecureStorage(String newPin) async {
+    try {
+      // Get the PIN auth local data source
+      final pinAuthLocalDataSource = getIt<PinAuthLocalDataSource>();
+      await pinAuthLocalDataSource.storePin(newPin);
+      print('DEBUG: Updated PIN in secure storage');
+    } catch (e) {
+      print('DEBUG: Failed to update PIN in secure storage: $e');
+    }
   }
 
   @action
@@ -397,25 +414,70 @@ abstract class _ProfileStore with Store {
   }
 
   String _extractServerMessage(dynamic failure) {
+    // 1. Use proper Freezed pattern matching for Failure objects
+    try {
+      if (failure is Failure) {
+        return failure.when(
+          serverError: (message) =>
+              message ?? 'Server error. Please try again.',
+          networkError: (message) =>
+              message ??
+              'Network error. Please check your internet connection.',
+          invalidInput: (message) =>
+              message ?? 'Invalid input. Please check your details.',
+          unauthorized: (message) =>
+              message ?? 'Session expired. Please login again.',
+          forbidden: (message) =>
+              message ??
+              'Access denied. You don\'t have permission to perform this action.',
+          notFound: (message) =>
+              message ?? 'The requested resource was not found.',
+          cacheError: (message) => message ?? 'Cache error. Please try again.',
+          biometricError: (message) =>
+              message ?? 'Biometric authentication failed. Please try again.',
+          unexpected: (message) =>
+              message ?? 'Something went wrong. Please try again.',
+        );
+      }
+    } catch (e) {
+      // Fallback if pattern matching fails
+    }
+
+    // 2. Fallback to string-based parsing for other types
     final failureString = failure.toString();
 
-    // Handle UnauthorizedFailure(message: Unauthorized) pattern
-    if (failureString.contains('UnauthorizedFailure(message:')) {
-      final startIndex =
-          failureString.indexOf('message:') + 8; // 'message:' length
+    // Handle Failure.serverError(message: xxx) pattern
+    if (failureString.contains('Failure.serverError(message:')) {
+      final startIndex = failureString.indexOf('message:') + 8;
       final endIndex = failureString.indexOf(')', startIndex);
       if (endIndex != -1) {
-        return failureString.substring(startIndex, endIndex).trim();
+        final message = failureString.substring(startIndex, endIndex).trim();
+        if (message.isNotEmpty && message != 'null') {
+          return message;
+        }
       }
     }
 
-    // Handle Failure.serverError(message: Unauthorized) pattern
-    if (failureString.contains('Failure.serverError(message:')) {
-      final startIndex =
-          failureString.indexOf('message:') + 8; // 'message:' length
+    // Handle other Failure patterns
+    if (failureString.contains('Failure.networkError(message:')) {
+      final startIndex = failureString.indexOf('message:') + 8;
       final endIndex = failureString.indexOf(')', startIndex);
       if (endIndex != -1) {
-        return failureString.substring(startIndex, endIndex).trim();
+        final message = failureString.substring(startIndex, endIndex).trim();
+        if (message.isNotEmpty && message != 'null') {
+          return message;
+        }
+      }
+    }
+
+    if (failureString.contains('Failure.unauthorized(message:')) {
+      final startIndex = failureString.indexOf('message:') + 8;
+      final endIndex = failureString.indexOf(')', startIndex);
+      if (endIndex != -1) {
+        final message = failureString.substring(startIndex, endIndex).trim();
+        if (message.isNotEmpty && message != 'null') {
+          return message;
+        }
       }
     }
 
@@ -450,6 +512,10 @@ abstract class _ProfileStore with Store {
       }
     }
 
-    return failureString.replaceAll('Exception: ', '');
+    // Clean up any remaining prefixes
+    return failureString
+        .replaceAll(RegExp(r'^Failure\.[^:]+\(message:\s*'), '')
+        .replaceAll(RegExp(r'\)$'), '')
+        .replaceAll('Exception: ', '');
   }
 }

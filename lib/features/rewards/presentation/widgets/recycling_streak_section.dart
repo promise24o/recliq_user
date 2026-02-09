@@ -15,265 +15,183 @@ class RecyclingStreakSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) {
-        final streakResponse = rewardsStore.streakResponse;
-        final isLoading = rewardsStore.isLoading;
+    return Observer(builder: (_) {
+      final data = rewardsStore.streakResponse;
+      if (rewardsStore.isLoading || data == null) {
+        return const SizedBox.shrink();
+      }
 
-        if (isLoading || streakResponse == null) {
-          return _buildLoadingState();
-        }
-
-        return Container(
-          padding: EdgeInsets.all(20.w),
-          decoration: BoxDecoration(
-            color: AppTheme.surfaceDark,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppTheme.borderSoft),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header with current streak
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: Colors.orange.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      FontAwesomeIcons.fire,
-                      color: Colors.orange,
-                      size: 24.sp,
-                    ),
+      return Container(
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceDark,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: AppTheme.borderSoft),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// HEADER
+            Row(
+              children: [
+                Container(
+                  width: 44.w,
+                  height: 44.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFA726).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${streakResponse.currentStreakWeeks} Week Streak',
-                          style: TextStyle(
-                            color: AppTheme.textPrimary,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          'Best: ${streakResponse.bestStreakWeeks} weeks',
-                          style: TextStyle(
-                            color: AppTheme.textMuted,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: Icon(
+                    FontAwesomeIcons.fire,
+                    color: const Color(0xFFFFA726),
+                    size: 22.sp,
                   ),
-                  if (streakResponse.isActive)
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20.r),
-                      ),
-                      child: Text(
-                        'Active',
+                ),
+                SizedBox(width: 14.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Recycling Streak',
                         style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 12.sp,
+                          color: AppTheme.textPrimary,
+                          fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                ],
-              ),
-
-              SizedBox(height: 16.h),
-
-              // Weekly activity
-              Text(
-                'Weekly Activity',
-                style: TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 12.h),
-
-              // Days of week
-              Row(
-                children: [
-                  _buildDayOfWeek('S', streakResponse.weeklyActivity.sun),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('M', streakResponse.weeklyActivity.mon),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('T', streakResponse.weeklyActivity.tue),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('W', streakResponse.weeklyActivity.wed),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('T', streakResponse.weeklyActivity.thu),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('F', streakResponse.weeklyActivity.fri),
-                  SizedBox(width: 8.w),
-                  _buildDayOfWeek('S', streakResponse.weeklyActivity.sat),
-                ],
-              ),
-
-              SizedBox(height: 16.h),
-
-              // Streak countdown
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: streakResponse.daysUntilBreak <= 1
-                      ? Colors.red.withOpacity(0.1)
-                      : Colors.orange.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.clock,
-                      color: streakResponse.daysUntilBreak <= 1
-                          ? Colors.red
-                          : Colors.orange,
-                      size: 16.sp,
-                    ),
-                    SizedBox(width: 8.w),
-                    Text(
-                      streakResponse.daysUntilBreak == 1
-                          ? '1 day until streak breaks!'
-                          : '${streakResponse.daysUntilBreak} days until streak breaks',
-                      style: TextStyle(
-                        color: streakResponse.daysUntilBreak <= 1
-                            ? Colors.red
-                            : Colors.orange,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildDayOfWeek(String day, bool isActive) {
-    return Expanded(
-      child: Container(
-        height: 32.h,
-        decoration: BoxDecoration(
-          color: isActive
-              ? Colors.orange.withOpacity(0.2)
-              : AppTheme.borderSoft.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(8.r),
-          border: Border.all(
-            color: isActive ? Colors.orange : AppTheme.borderSoft,
-            width: 1,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            day,
-            style: TextStyle(
-              color: isActive ? Colors.orange : AppTheme.textMuted,
-              fontSize: 12.sp,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLoadingState() {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppTheme.borderSoft),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  FontAwesomeIcons.fire,
-                  color: Colors.orange,
-                  size: 24.sp,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 18.h,
-                      width: 120.w,
-                      decoration: BoxDecoration(
-                        color: AppTheme.borderSoft,
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Container(
-                      height: 12.h,
-                      width: 80.w,
-                      decoration: BoxDecoration(
-                        color: AppTheme.borderSoft,
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          Container(
-            height: 14.h,
-            width: 100.w,
-            decoration: BoxDecoration(
-              color: AppTheme.borderSoft,
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-          ),
-          SizedBox(height: 12.h),
-          Row(
-            children: List.generate(
-                7,
-                (index) => Expanded(
-                      child: Container(
-                        margin: EdgeInsets.only(right: 8.w),
-                        height: 32.h,
-                        decoration: BoxDecoration(
-                          color: AppTheme.borderSoft,
-                          borderRadius: BorderRadius.circular(8.r),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '${data.currentStreakWeeks}-week streak',
+                        style: TextStyle(
+                          color: const Color(0xFFFFA726),
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    )),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2C2F3F),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    'Best: ${data.bestStreakWeeks}',
+                    style: TextStyle(
+                      color: const Color(0xFFFFA726),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 22.h),
+
+            /// WEEKLY ACTIVITY
+            Text(
+              'Weekly Activity',
+              style: TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 14.h),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: _day('Mon', data.weeklyActivity.mon)),
+                Expanded(child: _day('Tue', data.weeklyActivity.tue)),
+                Expanded(child: _day('Wed', data.weeklyActivity.wed)),
+                Expanded(child: _day('Thu', data.weeklyActivity.thu)),
+                Expanded(child: _day('Fri', data.weeklyActivity.fri)),
+                Expanded(child: _day('Sat', data.weeklyActivity.sat)),
+                Expanded(child: _day('Sun', data.weeklyActivity.sun)),
+              ],
+            ),
+
+            SizedBox(height: 20.h),
+
+            /// INFO BOX
+            Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2333),
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(
+                  color: const Color(0xFF2E3448),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 26.w,
+                    height: 26.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2A7C6F),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.info,
+                      size: 16.sp,
+                      color: const Color(0xFF7DE3C2),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      'Recycle at least once a week to keep your streak alive',
+                      style: TextStyle(
+                        color: AppTheme.textMuted,
+                        fontSize: 12.sp,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _day(String label, bool active) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: AppTheme.textMuted,
+            fontSize: 12.sp,
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 8.h),
+        Container(
+          width: 44.w,
+          height: 44.w,
+          decoration: BoxDecoration(
+            color: active ? const Color(0xFFFFA726) : const Color(0xFF2C2F3F),
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+          child: active
+              ? Icon(
+                  FontAwesomeIcons.fire,
+                  color: Colors.white,
+                  size: 18.sp,
+                )
+              : null,
+        ),
+      ],
     );
   }
 }

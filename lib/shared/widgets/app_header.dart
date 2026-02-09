@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import '../themes/app_theme.dart';
 import '../../core/constants/image_paths.dart';
 import '../../features/profile/presentation/mobx/profile_store.dart';
@@ -33,34 +34,17 @@ class AppHeader extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Row(
         children: [
-          // Leading Widget (Profile Avatar or Back Button)
+          // Leading: back button or profile avatar
           leading ??
               (showBackButton
-                  ? GestureDetector(
-                      onTap: onLeadingTap ?? () => Navigator.pop(context),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    )
+                  ? _buildSystemLikeBackButton(context)
                   : (profileStore != null
-                      ? Observer(
-                          builder: (_) => _buildProfileAvatar(context),
-                        )
+                      ? Observer(builder: (_) => _buildProfileAvatar(context))
                       : const SizedBox.shrink())),
 
           const SizedBox(width: 12),
 
-          // Title Section
+          // Title section
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +80,7 @@ class AppHeader extends StatelessWidget {
             ),
           ),
 
-          // Trailing Widget (Notification Bell)
+          // Trailing: notification bell (or custom trailing)
           trailing ??
               NotificationBell(
                 iconColor: Colors.white,
@@ -107,10 +91,74 @@ class AppHeader extends StatelessWidget {
     );
   }
 
+  Widget _buildSystemLikeBackButton(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () async {
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        } else {
+          // Root of the app → show confirm exit dialog
+          final bool? shouldExit = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color(0xFF1A1A2E),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              title: const Text(
+                'Exit App',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              content: const Text(
+                'Do you want to close the application?',
+                style: TextStyle(color: Colors.white70),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text(
+                    'Exit',
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
+                ),
+              ],
+            ),
+          );
+
+          if (shouldExit == true) {
+            SystemNavigator.pop();
+          }
+        }
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(
+          Icons.arrow_back_rounded,
+          color: Colors.white,
+          size: 22,
+        ),
+      ),
+    );
+  }
+
   Widget _buildProfileAvatar(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to profile page when avatar is tapped
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -151,8 +199,6 @@ class AppHeader extends StatelessWidget {
                     ),
                   ),
                   errorWidget: (context, url, error) {
-                    print('Error loading profile image: $error');
-                    print('URL: $url');
                     return Image.asset(
                       ImagePaths.avatar,
                       width: 40,

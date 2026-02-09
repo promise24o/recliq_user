@@ -16,6 +16,7 @@ class User with _$User {
     @Default(0.0) double walletBalance,
     String? profilePhoto,
     String? referralCode,
+    String? pin, // Add PIN field
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
