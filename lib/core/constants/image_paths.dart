@@ -9,7 +9,7 @@ class ImagePaths {
   static const String recycleAgent = 'assets/images/recycle_agent.png';
 
   // App Images
-  static const String appIcon = 'assets/images/app-icon.png';
+  static const String appIcon = 'assets/images/app-icon-v2-color.png';
   static const String appIconWhite = 'assets/images/app-icon-white.png';
   static const String avatar = 'assets/images/avatar.png';
   static const String noResult = 'assets/images/no-result.png';

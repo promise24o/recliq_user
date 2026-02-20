@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../../core/constants/image_paths.dart';
 import '../themes/app_theme.dart';
 
 class LoadingOverlay extends StatelessWidget {
@@ -97,7 +96,7 @@ class _PulseLoadingContentState extends State<_PulseLoadingContent>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(22),
                   child: Image.asset(
-                    ImagePaths.appIconWhite,
+                    'assets/images/launcher-icon.png',
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) {
                       return Container(

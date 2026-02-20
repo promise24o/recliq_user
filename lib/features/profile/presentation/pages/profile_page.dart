@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../widgets/account_section.dart';
 import '../widgets/personal_info_section.dart';
 import '../widgets/preferences_section.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/security_section.dart';
+import '../widgets/kyc_section.dart';
+import '../../../../shared/widgets/location_autocomplete.dart';
+import '../../../auth/domain/entities/user.dart';
 
 import '../mobx/profile_store.dart';
 
@@ -27,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final _phoneController = TextEditingController();
   String? _phoneError;
   final ImagePicker _imagePicker = ImagePicker();
+  LocationData? _selectedLocation;
 
   @override
   void initState() {
@@ -34,15 +39,32 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserData();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Update phone controller when user data changes
+    if (_profileStore.user != null) {
+      _phoneController.text = _profileStore.user!.phoneNumber ?? '';
+    }
+  }
+
   Future<void> _loadUserData() async {
     await _profileStore.loadProfileData();
-    _phoneController.text = _profileStore.user?.phoneNumber ?? '';
+    if (mounted) {
+      _phoneController.text = _profileStore.user?.phoneNumber ?? '';
+    }
   }
 
   @override
   void dispose() {
     _phoneController.dispose();
     super.dispose();
+  }
+
+  void _onLocationSelected(LocationData location) {
+    setState(() {
+      _selectedLocation = location;
+    });
   }
 
   Future<void> _handleUpdateProfile() async {
@@ -65,12 +87,29 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
 
+    // Convert LocationData to Location entity if available
+    Location? locationEntity;
+    if (_selectedLocation != null) {
+      locationEntity = Location(
+        type: 'Point',
+        coordinates: <double>[
+          _selectedLocation!.longitude,
+          _selectedLocation!.latitude,
+        ],
+        address: _selectedLocation!.address.isNotEmpty ? _selectedLocation!.address : null,
+        city: _selectedLocation!.city.isNotEmpty ? _selectedLocation!.city : null,
+        state: _selectedLocation!.state.isNotEmpty ? _selectedLocation!.state : null,
+        country: _selectedLocation!.country.isNotEmpty ? _selectedLocation!.country : null,
+      );
+    }
+
     await _profileStore.updateProfile(
-      name: _profileStore.user?.name ?? '',
+      name: _profileStore.user?.name,
       phone: _phoneController.text,
       profilePhoto: _profileStore.user?.profilePhoto,
       priceUpdates: _profileStore.priceUpdates,
       loginEmails: _profileStore.loginEmails,
+      location: locationEntity,
     );
 
     if (_profileStore.error == null) {
@@ -245,15 +284,23 @@ class _ProfilePageState extends State<ProfilePage> {
               profileStore: _profileStore,
               onUploadPhoto: _handleUploadPhoto,
             ),
-            PersonalInfoSection(
-              profileStore: _profileStore,
-              phoneController: _phoneController,
-              phoneError: _phoneError,
-              onUpdateProfile: _handleUpdateProfile,
+            Observer(
+              builder: (context) {
+                // Access the observable property to ensure tracking
+                final user = _profileStore.user;
+                return PersonalInfoSection(
+                  profileStore: _profileStore,
+                  phoneController: _phoneController,
+                  phoneError: _phoneError,
+                  onUpdateProfile: _handleUpdateProfile,
+                  onLocationSelected: _onLocationSelected,
+                );
+              },
             ),
             SecuritySection(
               profileStore: _profileStore,
             ),
+            const KycSection(),
             PreferencesSection(
               profileStore: _profileStore,
             ),

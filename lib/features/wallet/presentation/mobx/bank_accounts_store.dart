@@ -68,7 +68,12 @@ abstract class _BankAccountsStore with Store {
   }
 
   @action
-  Future<void> loadBanks() async {
+  Future<void> loadBanks({bool forceRefresh = false}) async {
+    // If we already have banks and not forcing refresh, don't reload
+    if (!forceRefresh && banks.isNotEmpty) {
+      return;
+    }
+
     isBanksLoading = true;
     verificationError = null;
 

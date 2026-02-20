@@ -164,8 +164,9 @@ mixin _$BankAccountsStore on _BankAccountsStore, Store {
       AsyncAction('_BankAccountsStore.loadBanks', context: context);
 
   @override
-  Future<void> loadBanks() {
-    return _$loadBanksAsyncAction.run(() => super.loadBanks());
+  Future<void> loadBanks({bool forceRefresh = false}) {
+    return _$loadBanksAsyncAction
+        .run(() => super.loadBanks(forceRefresh: forceRefresh));
   }
 
   late final _$verifyBankAccountAsyncAction =

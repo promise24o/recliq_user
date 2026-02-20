@@ -121,11 +121,12 @@ abstract class _ProfileStore with Store {
 
   @action
   Future<void> updateProfile({
-    required String name,
+    String? name,
     String? profilePhoto,
     String? phone,
     required bool priceUpdates,
     required bool loginEmails,
+    Location? location,
   }) async {
     isLoading = true;
     error = null;
@@ -137,6 +138,7 @@ abstract class _ProfileStore with Store {
         phone: _formatPhoneNumberForAPI(phone),
         priceUpdates: priceUpdates,
         loginEmails: loginEmails,
+        location: location,
       );
 
       result.fold(
@@ -389,8 +391,15 @@ abstract class _ProfileStore with Store {
   Future<void> _loadSettings() async {
     biometricEnabled =
         await _secureStorage.read(key: 'biometric_enabled') == 'true';
-    priceUpdates = await _secureStorage.read(key: 'price_updates') != 'false';
-    loginEmails = await _secureStorage.read(key: 'login_emails') != 'false';
+    
+    // Load from user notifications if available, otherwise use secure storage
+    if (user?.notifications != null) {
+      priceUpdates = user!.notifications!.priceUpdates ?? true;
+      loginEmails = user!.notifications!.loginEmails ?? true;
+    } else {
+      priceUpdates = await _secureStorage.read(key: 'price_updates') != 'false';
+      loginEmails = await _secureStorage.read(key: 'login_emails') != 'false';
+    }
   }
 
   Future<void> _saveSettings() async {

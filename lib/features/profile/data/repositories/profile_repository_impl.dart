@@ -54,22 +54,43 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<Failure, User>> updateProfile({
-    required String name,
+    String? name,
     String? profilePhoto,
     String? phone,
     required bool priceUpdates,
     required bool loginEmails,
+    Location? location,
   }) async {
     try {
+      final Map<String, dynamic> data = {
+        'priceUpdates': priceUpdates,
+        'loginEmails': loginEmails,
+      };
+      
+      if (name != null) data['name'] = name;
+      if (profilePhoto != null) data['profilePhoto'] = profilePhoto;
+      if (phone != null) data['phone'] = phone;
+      if (location != null) {
+        if (location.coordinates != null) {
+          data['coordinates'] = location.coordinates!;
+        }
+        if (location.address != null && location.address!.isNotEmpty) {
+          data['address'] = location.address!;
+        }
+        if (location.city != null && location.city!.isNotEmpty) {
+          data['city'] = location.city!;
+        }
+        if (location.state != null && location.state!.isNotEmpty) {
+          data['state'] = location.state!;
+        }
+        if (location.country != null && location.country!.isNotEmpty) {
+          data['country'] = location.country!;
+        }
+      }
+
       final response = await _dio.post(
         '/auth/update-profile',
-        data: {
-          'name': name,
-          if (profilePhoto != null) 'profilePhoto': profilePhoto,
-          if (phone != null) 'phone': phone,
-          'priceUpdates': priceUpdates,
-          'loginEmails': loginEmails,
-        },
+        data: data,
         options: Options(extra: {'requiresAuth': true}),
       );
 

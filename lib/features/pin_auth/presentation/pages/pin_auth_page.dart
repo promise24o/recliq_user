@@ -375,8 +375,8 @@ class _PinAuthPageState extends State<PinAuthPage> {
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        mainAxisSpacing: 20.h,
-        crossAxisSpacing: 20.w,
+        mainAxisSpacing: 16.h,
+        crossAxisSpacing: 16.w,
         childAspectRatio: 1.0,
       ),
       itemBuilder: (context, index) {
@@ -535,7 +535,7 @@ class _GlassButtonState extends State<GlassButton>
 
   @override
   Widget build(BuildContext context) {
-    const double buttonSize = 72.0;
+    const double buttonSize = 60.0;
 
     return GestureDetector(
       onTapDown: (_) => _controller.forward(),
@@ -570,14 +570,14 @@ class _GlassButtonState extends State<GlassButton>
                         ? Text(
                             widget.text!,
                             style: GoogleFonts.inter(
-                              fontSize: 28.sp,
+                              fontSize: 22.sp,
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
                             ),
                           )
                         : Icon(
                             widget.icon,
-                            size: 32.sp,
+                            size: 26.sp,
                             color: Colors.white,
                           ),
                   ),

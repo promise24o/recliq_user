@@ -43,7 +43,7 @@ class _AnimatedSplashPageState extends State<AnimatedSplashPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
-        child: Image.asset('assets/images/app-icon.png'),
+        child: Image.asset('assets/images/app-icon-v2-color.png'),
       ),
     );
   }

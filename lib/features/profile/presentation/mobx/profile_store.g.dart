@@ -117,17 +117,19 @@ mixin _$ProfileStore on _ProfileStore, Store {
 
   @override
   Future<void> updateProfile(
-      {required String name,
+      {String? name,
       String? profilePhoto,
       String? phone,
       required bool priceUpdates,
-      required bool loginEmails}) {
+      required bool loginEmails,
+      Location? location}) {
     return _$updateProfileAsyncAction.run(() => super.updateProfile(
         name: name,
         profilePhoto: profilePhoto,
         phone: phone,
         priceUpdates: priceUpdates,
-        loginEmails: loginEmails));
+        loginEmails: loginEmails,
+        location: location));
   }
 
   late final _$uploadProfilePhotoAsyncAction =

@@ -5,11 +5,12 @@ import '../../../../core/errors/failures.dart';
 abstract class ProfileRepository {
   Future<Either<Failure, User>> getCurrentUser();
   Future<Either<Failure, User>> updateProfile({
-    required String name,
+    String? name,
     String? profilePhoto,
     String? phone,
     required bool priceUpdates,
     required bool loginEmails,
+    Location? location,
   });
   Future<Either<Failure, String>> uploadProfilePhoto(String imagePath);
   Future<Either<Failure, void>> toggleBiometric(bool enabled);

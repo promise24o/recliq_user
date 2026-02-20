@@ -38,6 +38,9 @@ import '../../features/rewards/data/repositories/rewards_repository_impl.dart';
 import '../../features/rewards/data/datasources/rewards_datasource.dart';
 import '../../features/rewards/data/datasources/rewards_datasource_impl.dart';
 import '../../features/rewards/data/datasources/rewards_remote_data_source.dart';
+import '../../features/kyc/domain/repositories/kyc_repository.dart';
+import '../../features/kyc/data/repositories/kyc_repository_impl.dart';
+import '../../features/kyc/data/datasources/kyc_remote_datasource.dart';
 import '../../core/network/network_info.dart';
 import '../config/app_config.dart';
 import '../../features/auth/domain/usecases/complete_onboarding.dart';
@@ -221,5 +224,14 @@ Future<void> setupServiceLocator() async {
   // Rewards store
   getIt.registerFactory<RewardsStore>(
     () => RewardsStore(getIt<RewardsRepository>()),
+  );
+
+  // KYC dependencies
+  getIt.registerFactory<KycRemoteDataSource>(
+    () => KycRemoteDataSourceImpl(dio),
+  );
+
+  getIt.registerFactory<KycRepository>(
+    () => KycRepositoryImpl(getIt<KycRemoteDataSource>()),
   );
 }
