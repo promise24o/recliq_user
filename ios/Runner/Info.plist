@@ -49,5 +49,16 @@
 		<true/>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
+	
+		<!-- FCM Notification Permissions -->
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
+	
+		<!-- Notification Permission Description -->
+		<key>NSUserNotificationsUsageDescription</key>
+		<string>We need your permission to send you important notifications about your pickup requests, payment confirmations, and recycling updates.</string>
 	</dict>
 </plist>

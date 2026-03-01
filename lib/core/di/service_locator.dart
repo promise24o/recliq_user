@@ -41,10 +41,18 @@ import '../../features/rewards/data/datasources/rewards_remote_data_source.dart'
 import '../../features/kyc/domain/repositories/kyc_repository.dart';
 import '../../features/kyc/data/repositories/kyc_repository_impl.dart';
 import '../../features/kyc/data/datasources/kyc_remote_datasource.dart';
+import '../../features/pickup/domain/repositories/pickup_repository.dart';
+import '../../features/pickup/data/repositories/pickup_repository_impl.dart';
+import '../../features/pickup/data/datasources/pickup_remote_datasource.dart';
+import '../../features/pickup/data/datasources/recent_search_local_data_source.dart';
+import '../../features/pickup/presentation/mobx/pickup_store.dart';
 import '../../core/network/network_info.dart';
 import '../config/app_config.dart';
 import '../../features/auth/domain/usecases/complete_onboarding.dart';
 import '../interceptors/auth_interceptor.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../services/fcm_service.dart';
+import '../services/fcm_remote_data_source.dart';
 
 final getIt = GetIt.instance;
 
@@ -69,6 +77,21 @@ Future<void> setupServiceLocator() async {
   getIt.registerSingleton(NetworkInfoImpl(
     connectionChecker: InternetConnectionChecker.createInstance(),
   ));
+
+  // FCM services
+  getIt.registerSingleton(FirebaseMessaging.instance);
+  
+  getIt.registerFactory<FcmRemoteDataSource>(
+    () => FcmRemoteDataSource(dio, secureStorage),
+  );
+  
+  getIt.registerSingleton<FcmService>(
+    FcmService(
+      getIt<FirebaseMessaging>(),
+      getIt<FcmRemoteDataSource>(),
+      sharedPreferences,
+    ),
+  );
 
   // Auth and Profile repositories
   getIt.registerFactory<AuthRepository>(
@@ -233,5 +256,22 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<KycRepository>(
     () => KycRepositoryImpl(getIt<KycRemoteDataSource>()),
+  );
+
+  // Pickup dependencies
+  getIt.registerFactory<PickupRemoteDataSource>(
+    () => PickupRemoteDataSourceImpl(dio),
+  );
+
+  getIt.registerFactory<RecentSearchLocalDataSource>(
+    () => RecentSearchLocalDataSourceImpl(prefs: sharedPreferences),
+  );
+
+  getIt.registerFactory<PickupRepository>(
+    () => PickupRepositoryImpl(getIt<PickupRemoteDataSource>()),
+  );
+
+  getIt.registerFactory<PickupStore>(
+    () => PickupStore(repository: getIt<PickupRepository>()),
   );
 }

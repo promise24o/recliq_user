@@ -157,7 +157,6 @@ class _PersonalInfoSectionState extends State<PersonalInfoSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Test display for current address
                 if (_selectedLocation?.fullAddress != null)
                   Container(
                     padding: const EdgeInsets.all(8),

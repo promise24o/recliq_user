@@ -1,4 +1,4 @@
-package com.example.recliq_user
+package com.recliq.user
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

@@ -24,15 +24,17 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'dev.flutter.flutter-gradle-plugin'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    namespace = "com.example.recliq_user"
+    namespace = "com.recliq.user"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -44,7 +46,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.recliq_user"
+        applicationId "com.recliq.user"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -64,4 +66,16 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    
+    // Core library desugaring for flutter_local_notifications
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+    
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:34.9.0')
+    
+    // Firebase Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+    
+    // Add other Firebase products as needed
+    // https://firebase.google.com/docs/android/setup#available-libraries
 }

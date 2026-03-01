@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 import '../../../profile/presentation/mobx/profile_store.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../shared/themes/app_theme.dart';
 import '../../../../shared/widgets/app_header.dart';
 import '../../../wallet/presentation/pages/wallet_page.dart';
+import '../../../pickup/presentation/pages/request_pickup_page.dart';
+import '../../../pickup/presentation/pages/find_agent_page.dart';
+import '../../../pickup/presentation/pages/my_pickups_page.dart';
+import '../../../pickup/presentation/mobx/pickup_store.dart';
+import '../../../../core/utils/fcm_permission_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,17 +22,30 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedTabIndex = 0;
   final _profileStore = getIt<ProfileStore>();
+  final _pickupStore = getIt<PickupStore>();
 
   @override
   void initState() {
     super.initState();
     // Load profile data only if not already loaded
     _loadProfileDataIfNeeded();
+    // Request FCM notification permission after login
+    _requestNotificationPermission();
   }
 
   Future<void> _loadProfileDataIfNeeded() async {
     if (_profileStore.user == null) {
       await _profileStore.loadProfileData();
+    }
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    // Wait for the home screen to fully render
+    await Future.delayed(const Duration(seconds: 2));
+    
+    if (mounted) {
+      // Always check and request permission if not granted
+      await FcmPermissionHelper.requestNotificationPermission(context);
     }
   }
 
@@ -149,50 +168,100 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<void> _onActionCardTap(String title) async {
+    switch (title) {
+      case 'Request Pickup':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const RequestPickupPage()),
+        );
+        break;
+      case 'Find Agent':
+        double lat = 6.4524;
+        double lng = 3.4158;
+        try {
+          bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+          if (serviceEnabled) {
+            LocationPermission permission = await Geolocator.checkPermission();
+            if (permission == LocationPermission.denied) {
+              permission = await Geolocator.requestPermission();
+            }
+            if (permission != LocationPermission.denied &&
+                permission != LocationPermission.deniedForever) {
+              final pos = await Geolocator.getCurrentPosition();
+              lat = pos.latitude;
+              lng = pos.longitude;
+            }
+          }
+        } catch (_) {}
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => FindAgentPage(
+              lat: lat,
+              lng: lng,
+              pickupStore: _pickupStore,
+            ),
+          ),
+        );
+        break;
+      case 'History':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const MyPickupsPage()),
+        );
+        break;
+    }
+  }
+
   Widget _buildActionCard({
     required IconData icon,
     required String title,
     required String subtitle,
     required Color color,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
-              shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () => _onActionCardTap(title),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A2E),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 20,
+              ),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 20,
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: Colors.grey[400],
+                fontSize: 12,
+              ),
             ),
-          ),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 12,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
