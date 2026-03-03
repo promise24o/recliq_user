@@ -222,11 +222,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
+                      // Store context before popping
+                      final navigatorContext = context;
                       Navigator.pop(context);
                       await _profileStore.logout();
                       if (mounted) {
                         Navigator.pushAndRemoveUntil(
-                          context,
+                          navigatorContext,
                           MaterialPageRoute(
                             builder: (_) => const AuthGatePage(),
                           ),

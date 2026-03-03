@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import '../../domain/entities/pickup_request.dart';
 import '../../domain/entities/available_agent.dart';
+import '../../domain/entities/tracking_location.dart';
 
 abstract class PickupRemoteDataSource {
   Future<PickupRequest> createPickupRequest({
@@ -29,6 +30,8 @@ abstract class PickupRemoteDataSource {
     required String id,
     required String reason,
   });
+
+  Future<TrackingLocation> getTrackingLocation(String pickupId);
 }
 
 class PickupRemoteDataSourceImpl implements PickupRemoteDataSource {
@@ -120,5 +123,15 @@ class PickupRemoteDataSourceImpl implements PickupRemoteDataSource {
     );
 
     return PickupRequest.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  @override
+  Future<TrackingLocation> getTrackingLocation(String pickupId) async {
+    final response = await _dio.get(
+      '/pickup/$pickupId/track-location',
+      options: Options(extra: {'requiresAuth': true}),
+    );
+
+    return TrackingLocation.fromJson(response.data as Map<String, dynamic>);
   }
 }

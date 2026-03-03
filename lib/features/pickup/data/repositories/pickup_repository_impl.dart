@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/pickup_request.dart';
 import '../../domain/entities/available_agent.dart';
+import '../../domain/entities/tracking_location.dart';
 import '../../domain/repositories/pickup_repository.dart';
 import '../datasources/pickup_remote_datasource.dart';
 
@@ -97,6 +98,19 @@ class PickupRepositoryImpl implements PickupRepository {
     try {
       final result =
           await _remoteDataSource.cancelPickupRequest(id: id, reason: reason);
+      return Right(result);
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message'] as String? ?? e.message;
+      return Left(Failure.serverError(msg));
+    } catch (e) {
+      return Left(Failure.serverError(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TrackingLocation>> getTrackingLocation(String pickupId) async {
+    try {
+      final result = await _remoteDataSource.getTrackingLocation(pickupId);
       return Right(result);
     } on DioException catch (e) {
       final msg = e.response?.data?['message'] as String? ?? e.message;

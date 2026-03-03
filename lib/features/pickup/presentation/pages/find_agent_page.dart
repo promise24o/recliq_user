@@ -368,6 +368,7 @@ class _FindAgentPageState extends State<FindAgentPage> {
                       ),
                     ),
                   ),
+                  const SizedBox(height:40)
                 ],
               ),
             )

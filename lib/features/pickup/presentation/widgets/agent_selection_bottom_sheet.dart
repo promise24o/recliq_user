@@ -352,6 +352,7 @@ class _AgentSelectionBottomSheetState extends State<AgentSelectionBottomSheet> {
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -362,25 +363,31 @@ class _AgentSelectionBottomSheetState extends State<AgentSelectionBottomSheet> {
                         size: 14,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        '${agent.distance.toStringAsFixed(2)} km away',
-                        style: const TextStyle(
-                          color: AppTheme.textMuted,
-                          fontSize: 12,
+                      Expanded(
+                        child: Text(
+                          '${agent.distance.toStringAsFixed(1)} km away',
+                          style: const TextStyle(
+                            color: AppTheme.textMuted,
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       Icon(
                         Icons.access_time,
                         color: AppTheme.textMuted.withOpacity(0.7),
                         size: 14,
                       ),
                       const SizedBox(width: 4),
-                      Text(
-                        '~${agent.estimatedArrivalTime} min',
-                        style: const TextStyle(
-                          color: AppTheme.textMuted,
-                          fontSize: 12,
+                      Expanded(
+                        child: Text(
+                          '~${agent.estimatedArrivalTime} min',
+                          style: const TextStyle(
+                            color: AppTheme.textMuted,
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],
@@ -395,34 +402,20 @@ class _AgentSelectionBottomSheetState extends State<AgentSelectionBottomSheet> {
                           size: 14,
                         ),
                         const SizedBox(width: 4),
-                        Text(
-                          agent.rating.toStringAsFixed(1),
-                          style: const TextStyle(
-                            color: AppTheme.textMuted,
-                            fontSize: 12,
+                        Expanded(
+                          child: Text(
+                            agent.rating.toStringAsFixed(1),
+                            style: const TextStyle(
+                              color: AppTheme.textMuted,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ],
-              ),
-            ),
-
-            // Select button
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryGreen,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Text(
-                'Select',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
               ),
             ),
           ],

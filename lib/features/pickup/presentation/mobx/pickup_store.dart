@@ -2,12 +2,14 @@ import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import '../../domain/entities/pickup_request.dart';
 import '../../domain/entities/available_agent.dart';
+import '../../domain/entities/tracking_location.dart';
 import '../../domain/repositories/pickup_repository.dart';
 import '../../domain/usecases/create_pickup_request.dart';
 import '../../domain/usecases/get_available_agents.dart';
 import '../../domain/usecases/get_my_pickup_requests.dart';
 import '../../domain/usecases/get_pickup_by_id.dart';
 import '../../domain/usecases/cancel_pickup_request.dart';
+import '../../domain/usecases/get_tracking_location.dart';
 
 part 'pickup_store.g.dart';
 
@@ -20,6 +22,7 @@ abstract class _PickupStore with Store {
   late final GetMyPickupRequests _getMyPickupRequests;
   late final GetPickupById _getPickupById;
   late final CancelPickupRequest _cancelPickupRequest;
+  late final GetTrackingLocation _getTrackingLocation;
 
   _PickupStore({required PickupRepository repository})
       : _repository = repository {
@@ -28,6 +31,7 @@ abstract class _PickupStore with Store {
     _getMyPickupRequests = GetMyPickupRequests(_repository);
     _getPickupById = GetPickupById(_repository);
     _cancelPickupRequest = CancelPickupRequest(_repository);
+    _getTrackingLocation = GetTrackingLocation(_repository);
   }
 
   @observable
@@ -59,6 +63,12 @@ abstract class _PickupStore with Store {
   bool isLoadingAgents = false;
 
   @observable
+  bool isLoadingTracking = false;
+
+  @observable
+  TrackingLocation? trackingLocation;
+
+  @observable
   String? error;
 
   @observable
@@ -69,6 +79,7 @@ abstract class _PickupStore with Store {
         (r) =>
             r.status == 'new' ||
             r.status == 'matching' ||
+            r.status == 'pending_acceptance' ||
             r.status == 'assigned' ||
             r.status == 'agent_en_route' ||
             r.status == 'arrived',
@@ -79,6 +90,7 @@ abstract class _PickupStore with Store {
       .where((r) =>
           r.status == 'new' ||
           r.status == 'matching' ||
+          r.status == 'pending_acceptance' ||
           r.status == 'assigned' ||
           r.status == 'agent_en_route' ||
           r.status == 'arrived')
@@ -247,6 +259,34 @@ abstract class _PickupStore with Store {
   @action
   void selectAgent(AvailableAgent? agent) {
     selectedAgent = agent;
+  }
+
+  @action
+  Future<void> loadTrackingLocation(String pickupId) async {
+    isLoadingTracking = true;
+    error = null;
+
+    final result = await _getTrackingLocation(pickupId);
+    result.fold(
+      (failure) {
+        error = failure.when(
+          serverError: (msg) => msg ?? 'Failed to load tracking data',
+          networkError: (msg) => msg ?? 'No internet connection',
+          invalidInput: (msg) => msg ?? 'Invalid request',
+          unauthorized: (msg) => msg ?? 'Unauthorized',
+          forbidden: (msg) => msg ?? 'Forbidden',
+          notFound: (msg) => msg ?? 'Not found',
+          cacheError: (msg) => msg ?? 'Cache error',
+          biometricError: (msg) => msg ?? 'Biometric error',
+          unexpected: (msg) => msg ?? 'Unexpected error',
+        );
+      },
+      (tracking) {
+        trackingLocation = tracking;
+      },
+    );
+
+    isLoadingTracking = false;
   }
 
   @action

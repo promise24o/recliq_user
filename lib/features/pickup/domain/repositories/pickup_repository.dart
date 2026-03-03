@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../entities/pickup_request.dart';
 import '../entities/available_agent.dart';
+import '../entities/tracking_location.dart';
 
 abstract class PickupRepository {
   Future<Either<Failure, PickupRequest>> createPickupRequest({
@@ -30,4 +31,6 @@ abstract class PickupRepository {
     required String id,
     required String reason,
   });
+
+  Future<Either<Failure, TrackingLocation>> getTrackingLocation(String pickupId);
 }

@@ -160,14 +160,15 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
   }
 
   Widget _otpField(int index) {
-    return Container(
-      width: 52,
-      height: 62,
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white10, width: 1.2),
-      ),
+    return Expanded(
+      child: Container(
+        height: 62,
+        margin: const EdgeInsets.symmetric(horizontal: 2),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceDark,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white10, width: 1.2),
+        ),
       child: TextField(
         controller: _otpControllers[index],
         focusNode: _focusNodes[index],
@@ -190,6 +191,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             _handleVerification();
           }
         },
+      ),
       ),
     );
   }
@@ -267,7 +269,6 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                   color: Colors.white.withOpacity(0.02),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: List.generate(6, _otpField),
                 ),
               ),

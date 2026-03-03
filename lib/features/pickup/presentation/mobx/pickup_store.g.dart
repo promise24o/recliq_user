@@ -175,6 +175,38 @@ mixin _$PickupStore on _PickupStore, Store {
     });
   }
 
+  late final _$isLoadingTrackingAtom =
+      Atom(name: '_PickupStore.isLoadingTracking', context: context);
+
+  @override
+  bool get isLoadingTracking {
+    _$isLoadingTrackingAtom.reportRead();
+    return super.isLoadingTracking;
+  }
+
+  @override
+  set isLoadingTracking(bool value) {
+    _$isLoadingTrackingAtom.reportWrite(value, super.isLoadingTracking, () {
+      super.isLoadingTracking = value;
+    });
+  }
+
+  late final _$trackingLocationAtom =
+      Atom(name: '_PickupStore.trackingLocation', context: context);
+
+  @override
+  TrackingLocation? get trackingLocation {
+    _$trackingLocationAtom.reportRead();
+    return super.trackingLocation;
+  }
+
+  @override
+  set trackingLocation(TrackingLocation? value) {
+    _$trackingLocationAtom.reportWrite(value, super.trackingLocation, () {
+      super.trackingLocation = value;
+    });
+  }
+
   late final _$errorAtom = Atom(name: '_PickupStore.error', context: context);
 
   @override
@@ -260,6 +292,15 @@ mixin _$PickupStore on _PickupStore, Store {
         .run(() => super.cancelRequest(id: id, reason: reason));
   }
 
+  late final _$loadTrackingLocationAsyncAction =
+      AsyncAction('_PickupStore.loadTrackingLocation', context: context);
+
+  @override
+  Future<void> loadTrackingLocation(String pickupId) {
+    return _$loadTrackingLocationAsyncAction
+        .run(() => super.loadTrackingLocation(pickupId));
+  }
+
   late final _$_PickupStoreActionController =
       ActionController(name: '_PickupStore', context: context);
 
@@ -308,6 +349,8 @@ selectedAgent: ${selectedAgent},
 isLoading: ${isLoading},
 isCreating: ${isCreating},
 isLoadingAgents: ${isLoadingAgents},
+isLoadingTracking: ${isLoadingTracking},
+trackingLocation: ${trackingLocation},
 error: ${error},
 successMessage: ${successMessage},
 hasActiveRequest: ${hasActiveRequest},
